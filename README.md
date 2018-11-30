@@ -9,7 +9,7 @@ First initialize the virtual environment required to run wikifier.
 
 ```
 conda env create .
-source activate dig_text_similarity
+source activate wikifier
 ```
 
 This module needs etk module to run. 
