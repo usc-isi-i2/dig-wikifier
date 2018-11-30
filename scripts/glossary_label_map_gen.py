@@ -1,7 +1,6 @@
 import gzip, json, os , sys
 import re
 from collections import defaultdict
-linecount = -1
 mapOflabels = defaultdict(list)
 
 # Add all the languages that we want to extract here
@@ -13,13 +12,8 @@ def clean(string: str):
 #logfile = open('run.log', 'a')
 print("Starting file processing ......")
 with gzip.GzipFile('wikidata.gz', 'r') as fin:
-    for line in fin:
-        linecount+=1
+    for linecount,line in enumerate(fin):
 
-        if linecount % 10000 == 0:
-            print("< Status update >\n")
-            print("Processing entity {}".format(linecount))
-            #logfile.write("Processing entity {}\n".format(linecount))
         try:
             js = line.strip().decode('utf-8')[:-1]
             data = json.loads(js)
@@ -44,6 +38,7 @@ with gzip.GzipFile('wikidata.gz', 'r') as fin:
         except:
             continue
 
+print("Writing output to file...")
 
 with open("label_map.json","w") as out:
     out.write(json.dumps(mapOflabels))
@@ -52,5 +47,4 @@ with open("glossary.txt","w") as outfile:
     for word in glossary:
         outfile.write(word + "\n")
 
-print("Done")
 
