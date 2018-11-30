@@ -31,7 +31,7 @@ def home():
 def create_bipartite_graph():
     request_data = json.loads(request.data)
     tokens = anchor_text_extractor.extract_tokens(request_data["text"])
-    gp = graph_builder.build_graph(tokens)
+    gp = graph_builder.process(tokens)
     response = app.response_class(
         response=json.dumps(gp),
         status=200,
