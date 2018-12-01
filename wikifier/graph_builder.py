@@ -23,6 +23,7 @@ class GraphBuilder():
     def compute_edge_scores(self, graph_data):
         setOfQnodes = graph_data['right']
         neighbor_map = self.redisManager.getKeys(setOfQnodes, prefix="all:")
+        graph_data['neighbor_map'] = neighbor_map
         return
 
     def process(self, tokens):
