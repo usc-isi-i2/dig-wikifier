@@ -30,7 +30,7 @@ class RedisManager(object):
         self.sadd(key, *(vals))
         return
 
-    def getKeys(self ,keys):
+    def getKeys(self ,keys, prefix=""):
         """
         :param keys: List of keys to fetch
         :return: A dictionary of the keys and their corresponding value sets.
@@ -38,8 +38,9 @@ class RedisManager(object):
         # Fetch several sets of keys using redis pipeline
         pipe = self.redis.pipeline()
         for key in keys:
-            pipe.smembers(key)
+            pipe.smembers(prefix+key)
         data = dict(zip(keys,pipe.execute()))
         return data
+
 
 

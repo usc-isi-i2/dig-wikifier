@@ -20,10 +20,12 @@ class GraphBuilder():
         data['right'] =  list(set_b)
         return data
 
-    def compute_edge_scores(self):
-        pass
-
+    def compute_edge_scores(self, graph_data):
+        setOfQnodes = graph_data['right']
+        neighbor_map = self.redisManager.getKeys(setOfQnodes, prefix="all:")
+        return
 
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
+        self.compute_edge_scores(graph_data)
         return graph_data
