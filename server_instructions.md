@@ -47,6 +47,7 @@ needed.
 
 The redis server is located in the `/lfs1/wikidata/redis` folder. There is a script to start the redis server. This redis server has BGSAVE
 so its data will be persisted in disk in case of unexpected shutdowns.
+Redis config file - redis/redis-5.0.0/config/6379.conf
 
 ## To run wikifier
 1. Activate the virtual env - wikifier
