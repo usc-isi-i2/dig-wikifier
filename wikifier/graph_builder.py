@@ -1,5 +1,7 @@
 from storage.redis_manager import RedisManager
 from collections import defaultdict
+import sys
+
 class GraphBuilder():
     def __init__(self, host, port):
         self.redisManager = RedisManager(host, port)
@@ -21,12 +23,25 @@ class GraphBuilder():
         return data
 
     def compute_edge_scores(self, graph_data):
-        setOfQnodes = graph_data['right']
-        neighbor_map = self.redisManager.getKeys(setOfQnodes, prefix="all:")
-        graph_data['neighbor_map'] = neighbor_map
-        return
+        qnodes = graph_data['right']
+        anchors = graph_data['left']
+        neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
+        for anchor in anchors:
+            # Compute transition probability from anchor text to concept
+            edges = graph_data['graph'][anchor]
+            total_score = 0
+            for i, edge in enumerate(edges):
+                node, score = edge
+                score = len(neighbor_map[node])
+                total_score+=score
+                edges[i] = (node,score)
+
+            edges = [(edge[0], 1.* edge[1]/total_score) for edge in edges]
+            graph_data['graph'][anchor] = edges
+        return neighbor_map
 
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
         self.compute_edge_scores(graph_data)
+
         return graph_data
