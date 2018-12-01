@@ -49,7 +49,7 @@ The redis server is located in the `/lfs1/wikidata/redis` folder. There is a scr
 so its data will be persisted in disk in case of unexpected shutdowns.
 
 ## To run wikifier
-1. Active the virtual env - wikifier
+1. Activate the virtual env - wikifier
 2. Go to `/lfs1/wikidata/wikifier/` and execute `run_wikifier.sh`
 
 the log for the service is written to `wiki.log`
