@@ -1,6 +1,7 @@
 from storage.redis_manager import RedisManager
 from collections import defaultdict
 import networkx as nx
+from networkx.readwrite import json_graph
 import sys
 
 class GraphBuilder():
@@ -27,7 +28,7 @@ class GraphBuilder():
         qnodes = graph_data['right']
         anchors = graph_data['left']
         neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
-        G=nx.Graph()
+        G=nx.DiGraph()
 
         for anchor in anchors:
             # Compute transition probability from anchor text to concepts.
@@ -39,10 +40,11 @@ class GraphBuilder():
                 score = len(neighbor_map[node])
                 total_score+=score
                 edges[i] = (node,score)
-                G.add_edge(anchor, node, weight=score)
-            edges = [(edge[0], 1.* edge[1]/total_score) for edge in edges]
+            edges = [(anchor, edge[0], 1.* edge[1]/total_score) for edge in edges]
+            G.add_weighted_edges_from(edges)
             graph_data['graph'][anchor] = edges
-        graph_data['nx'] = G.edges
+        graph_data['nx'] = json_graph.adjacency_data(G)
+
         # Augment graph with edges between concepts if it is allowed.
         for first in qnodes:
             for second in qnodes:
