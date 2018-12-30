@@ -3,6 +3,7 @@ from collections import defaultdict
 import networkx as nx
 from networkx.readwrite import json_graph
 import sys
+import math
 
 class GraphBuilder():
     def __init__(self, host, port):
@@ -43,14 +44,30 @@ class GraphBuilder():
             edges = [(anchor, edge[0], 1.* edge[1]/total_score) for edge in edges]
             G.add_weighted_edges_from(edges)
             graph_data['graph'][anchor] = edges
-        graph_data['nx'] = json_graph.adjacency_data(G)
+        #graph_data['nx'] = json_graph.adjacency_data(G)
 
         # Augment graph with edges between concepts if it is allowed.
         for first in qnodes:
+            total=0.0
             for second in qnodes:
-                if first == second:
-                    continue
+                if first != second:
+                    sr_score = 1
+                    n1 = neighbor_map[first]
+                    n2 = neighbor_map[second]
+                    inter_val = len(set(n1).intersection(set(n2)))
+                    min_val = min(len(n1), len(n2))
+                    #sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val))) / ( 43000000 - (min_val if min_val <=0 else math.log(min_val)))
+                    sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val,10))) / ( math.log(53000000,10) - (min_val if min_val <=0 else math.log(min_val,10)))                    
+                    sr_score = sr_score - sim_score
+                    total+=sr_score
+                    if sr_score > 0:
+                        G.add_weighted_edges_from([(first,second,sr_score)])
 
+            for second in qnodes:
+                if second in G[first]:
+                    G[first][second]['weight']/=total
+        
+        graph_data['nx'] = json_graph.adjacency_data(G)
 
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
