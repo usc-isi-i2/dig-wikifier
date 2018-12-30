@@ -38,4 +38,3 @@ def create_bipartite_graph():
         mimetype='application/json'
     )
     return response
-    #return jsonify(gp)
