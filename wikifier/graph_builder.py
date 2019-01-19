@@ -4,6 +4,8 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import sys
 import math
+from flask import Flask, app
+
 
 class GraphBuilder():
     def __init__(self, host, port):
@@ -20,16 +22,16 @@ class GraphBuilder():
             res = self.redisManager.getKey(token)
             set_b.update(res)
             for i in res:
-                data['graph'][token].append((i,0.0))
+                data['graph'][token].append((i, 0.0))
         data['left'] = list(set_a)
-        data['right'] =  list(set_b)
+        data['right'] = list(set_b)
         return data
 
     def compute_edge_scores(self, graph_data):
         qnodes = graph_data['right']
         anchors = graph_data['left']
         neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
-        G=nx.DiGraph()
+        G = nx.DiGraph()
 
         for anchor in anchors:
             # Compute transition probability from anchor text to concepts.
@@ -39,16 +41,16 @@ class GraphBuilder():
             for i, edge in enumerate(edges):
                 node, score = edge
                 score = len(neighbor_map[node])
-                total_score+=score
-                edges[i] = (node,score)
-            edges = [(anchor, edge[0], 1.* edge[1]/total_score) for edge in edges]
+                total_score += score
+                edges[i] = (node, score)
+            edges = [(anchor, edge[0], 1. * edge[1] / total_score) for edge in edges]
             G.add_weighted_edges_from(edges)
-            graph_data['graph'][anchor] = edges
-        #graph_data['nx'] = json_graph.adjacency_data(G)
+            #graph_data['graph'][anchor] = edges
+        del graph_data['graph']
 
         # Augment graph with edges between concepts if it is allowed.
         for first in qnodes:
-            total=0.0
+            total = 0.0
             for second in qnodes:
                 if first != second:
                     sr_score = 1
@@ -56,21 +58,40 @@ class GraphBuilder():
                     n2 = neighbor_map[second]
                     inter_val = len(set(n1).intersection(set(n2)))
                     min_val = min(len(n1), len(n2))
-                    #sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val))) / ( 43000000 - (min_val if min_val <=0 else math.log(min_val)))
-                    sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val,10))) / ( math.log(53000000,10) - (min_val if min_val <=0 else math.log(min_val,10)))                    
+                    max_val = max(len(n1), len(n2))
+                    # sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val))) / ( 43000000 - (min_val if min_val <=0 else math.log(min_val)))
+                    sim_score = ((max_val * 1. if max_val <= 0 else math.log(max_val, 10)) - (
+                    inter_val * 1. if inter_val <= 0 else math.log(inter_val, 10))) / (
+                                math.log(53000000, 10) - (min_val * 1. if min_val <= 0 else math.log(min_val, 10)))
                     sr_score = sr_score - sim_score
-                    total+=sr_score
+                    total += sr_score
                     if sr_score > 0:
-                        G.add_weighted_edges_from([(first,second,sr_score)])
+                        G.add_weighted_edges_from([(first, second, sr_score)])
 
             for second in qnodes:
                 if second in G[first]:
-                    G[first][second]['weight']/=total
-        
-        graph_data['nx'] = json_graph.adjacency_data(G)
+                    G[first][second]['weight'] /= total
+
+        res = nx.pagerank(G, alpha=0.1, weight='weight')
+        graph_data['nx'] = dict()
+        pr_result = dict()
+        #graph_data['nx'] = json_graph.node_link_data(G)
+        # Setting the top node for the graph
+        for anchor in anchors:
+            edges = G.edges(anchor)
+            # Iterate and find the most suitable concept, use pagerank scores to choose
+            max_node = None
+            max_val = -1
+            for (u,v) in edges:
+                if res[v] > max_val:
+                    max_val = res[v]
+                    max_node = v
+            pr_result[anchor] = {max_node: max_val}
+        graph_data['pr_result'] = pr_result
 
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
         self.compute_edge_scores(graph_data)
 
         return graph_data
+
