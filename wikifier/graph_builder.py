@@ -86,7 +86,8 @@ class GraphBuilder():
                 if res[v] > max_val:
                     max_val = res[v]
                     max_node = v
-            pr_result[anchor] = {max_node: max_val}
+            if max_val > 0:
+                pr_result[anchor] = {max_node: max_val}
         graph_data['pr_result'] = pr_result
 
     def process(self, tokens):
