@@ -26,7 +26,6 @@ print("Initialization complete")
 def home():
     return 'Wikifier implementation'
 
-
 @app.route('/annotate', methods=['POST'])
 def create_bipartite_graph():
     request_data = json.loads(request.data)

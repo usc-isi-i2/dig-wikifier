@@ -39,12 +39,18 @@ class AnchorTextExtractor():
         """
         self.etk = ETK(modules=GlossaryETKModule)
 
+    # Perform same cleaning as what was done while processing wikidata
+    def clean(self, string: str):
+        string = ' '.join(string.split()).strip()
+        return string
+
     def extract_tokens(self, text):
         """
 
         :param text:  The text to extract tokens from
         :return: set of tokens
         """
+        text["text_description"] = self.clean(text["text_description"])
         doc = self.etk.create_document(text)
         start = time.time()
         docs = self.etk.process_ems(doc)
