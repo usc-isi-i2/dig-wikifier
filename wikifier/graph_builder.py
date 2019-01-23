@@ -27,7 +27,7 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
-    def compute_edge_scores(self, graph_data, provenance):
+    def compute_edge_scores(self, graph_data):
         qnodes = graph_data['right']
         anchors = graph_data['left']
         neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
@@ -87,12 +87,12 @@ class GraphBuilder():
                     max_val = res[v]
                     max_node = v
             if max_val > 0:
-                pr_result[anchor] = {max_node: max_val, "provenance": provenance[anchor]}
+                pr_result[anchor] = {max_node: max_val}
         graph_data['pr_result'] = pr_result
 
-    def process(self, tokens, provenance):
+    def process(self, tokens):
         graph_data = self.build_graph(tokens)
-        self.compute_edge_scores(graph_data, provenance)
+        self.compute_edge_scores(graph_data)
 
         return graph_data
 

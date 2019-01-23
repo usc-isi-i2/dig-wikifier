@@ -55,13 +55,11 @@ class AnchorTextExtractor():
         start = time.time()
         docs = self.etk.process_ems(doc)
         data = list()
-        provenance = defaultdict()
         for doc in docs:
             texts = doc.select_segments("$.anchor_text")
             for text in texts:
-                provenance[text] = text.provenance
                 data.extend(text.value)
         end = time.time()
-        return data, provenance
+        return data
 
 
