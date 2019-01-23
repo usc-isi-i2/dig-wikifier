@@ -59,7 +59,7 @@ class AnchorTextExtractor():
         for doc in docs:
             texts = doc.select_segments("$.anchor_text")
             for text in texts:
-                provenance[text] = { "start": text.start_token, "end": text.end_token}
+                provenance[text] = text.provenance
                 data.extend(text.value)
         end = time.time()
         return data, provenance
