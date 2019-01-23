@@ -29,8 +29,8 @@ def home():
 @app.route('/annotate', methods=['POST'])
 def create_bipartite_graph():
     request_data = json.loads(request.data)
-    tokens = anchor_text_extractor.extract_tokens(request_data["text"])
-    gp = graph_builder.process(tokens)
+    tokens, provenance = anchor_text_extractor.extract_tokens(request_data["text"])
+    gp = graph_builder.process(tokens, provenance)
     response = app.response_class(
         response=json.dumps(gp),
         status=200,
