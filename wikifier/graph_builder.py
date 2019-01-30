@@ -27,12 +27,6 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
-    def compute_transition_score(self, nodes, anchor_text):
-        count = 0
-        for node in nodes:
-            if self.redisManager.checkIfExists(node, anchor_text, keyprefix="lbl:"):
-                count+=1
-        return count
 
     def compute_edge_scores(self, graph_data):
         qnodes = graph_data['right']
@@ -47,7 +41,7 @@ class GraphBuilder():
             G.add_node(anchor)
             for i, edge in enumerate(edges):
                 node, score = edge
-                score = self.compute_transition_score(neighbor_map[node], anchor)
+                score = self.redisManager.get(anchor+":"+i)
                 total_score += score
                 edges[i] = (node, score)
             edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]

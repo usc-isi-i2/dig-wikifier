@@ -11,12 +11,23 @@ class RedisManager(object):
     def getKey(self, key):
         """
 
-        :param key:  the key to fetch
-        :return: list of members for that key
+        :param key:  the key of the set to fetch
+        :return: list of members for that set
         """
         # Retreive all the members of the set 'key'
         elements = self.redis.smembers(key)
         return elements
+
+    def get(self, key):
+        """
+
+        :param key: the key to fetch
+        :return: integer count stored at that key
+        """
+        ret_val = self.redis.get(key)
+        if not ret_val:
+            ret_val = 0
+        return ret_val
 
 
     def setKey(self, key, vals):
