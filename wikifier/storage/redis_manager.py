@@ -30,6 +30,16 @@ class RedisManager(object):
         self.sadd(key, *(vals))
         return
 
+    def checkIfExists(self, key, value, keyprefix=""):
+        """
+
+        :param key: the key to search in
+        :param value: the value to check if it is a member of the set stored at 'key'
+        :return: Boolean
+        """
+        flag = self.redis.sismember(keyprefix+key, value)
+        return flag
+
     def getKeys(self ,keys, prefix=""):
         """
         :param keys: List of keys to fetch
