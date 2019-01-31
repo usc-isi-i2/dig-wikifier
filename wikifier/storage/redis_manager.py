@@ -27,7 +27,7 @@ class RedisManager(object):
         ret_val = self.redis.get(key)
         if not ret_val:
             ret_val = 0
-        return ret_val
+        return int(ret_val)
 
 
     def setKey(self, key, vals):

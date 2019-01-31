@@ -41,7 +41,7 @@ class GraphBuilder():
             G.add_node(anchor)
             for i, edge in enumerate(edges):
                 node, score = edge
-                score = self.redisManager.get(anchor+":"+i)
+                score = self.redisManager.get(anchor+":"+node)
                 total_score += score
                 edges[i] = (node, score)
             edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]
