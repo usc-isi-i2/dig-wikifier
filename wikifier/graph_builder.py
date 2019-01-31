@@ -59,12 +59,13 @@ class GraphBuilder():
                     n2 = neighbor_map[second]
                     inter_val = len(set(n1).intersection(set(n2)))
                     min_val = min(len(n1), len(n2))
-                    max_val = max(len(n1), len(n2))
+                    #max_val = max(len(n1), len(n2))
                     # sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val))) / ( 43000000 - (min_val if min_val <=0 else math.log(min_val)))
-                    sim_score = ((max_val * 1. if max_val <= 0 else math.log(max_val, 10)) - (
-                    inter_val * 1. if inter_val <= 0 else math.log(inter_val, 10))) / (
-                                math.log(53000000, 10) - (min_val * 1. if min_val <= 0 else math.log(min_val, 10)))
-                    sr_score = sr_score - sim_score
+                    # sim_score = ((max_val * 1. if max_val <= 0 else math.log(max_val, 10)) - (
+                    # inter_val * 1. if inter_val <= 0 else math.log(inter_val, 10))) / (
+                    #             math.log(53000000, 10) - (min_val * 1. if min_val <= 0 else math.log(min_val, 10)))
+                    # sr_score = sr_score - sim_score
+                    sr_score = inter_val/min_val
                     total += sr_score
                     if sr_score > 0:
                         G.add_weighted_edges_from([(first, second, sr_score)])
