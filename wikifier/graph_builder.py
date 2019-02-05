@@ -31,6 +31,9 @@ class GraphBuilder():
     def compute_edge_scores(self, graph_data):
         qnodes = graph_data['right']
         anchors = graph_data['left']
+        del graph_data['right']
+        del graph_data['left']
+
         neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
         G = nx.DiGraph()
 
@@ -43,6 +46,8 @@ class GraphBuilder():
                 node, score = edge
                 score = self.redisManager.get(anchor+":"+node)
                 total_score += score
+                if score == 0:
+                    del edges[i]
                 edges[i] = (node, score)
             edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]
             G.add_weighted_edges_from(edges)
@@ -65,7 +70,7 @@ class GraphBuilder():
                     # inter_val * 1. if inter_val <= 0 else math.log(inter_val, 10))) / (
                     #             math.log(53000000, 10) - (min_val * 1. if min_val <= 0 else math.log(min_val, 10)))
                     # sr_score = sr_score - sim_score
-                    sr_score = inter_val/min_val
+                    sr_score = inter_val
                     total += sr_score
                     if sr_score > 0:
                         G.add_weighted_edges_from([(first, second, sr_score)])
@@ -79,17 +84,28 @@ class GraphBuilder():
         pr_result = dict()
         #graph_data['nx'] = json_graph.node_link_data(G)
         # Setting the top node for the graph
+
+        # Fetch all labels that are needed
+        label_keys = qnodes
+        labels = self.redisManager.getKeys(keys=label_keys, prefix="lbl:")
+
+        # Construct final result json
         for anchor in anchors:
             edges = G.edges(anchor)
             # Iterate and find the most suitable concept, use pagerank scores to choose
             max_node = None
             max_val = -1
+            pr_result[anchor] = dict()
+            pr_result[anchor]['candidates'] = list()
             for (u,v) in edges:
                 if res[v] > max_val:
                     max_val = res[v]
                     max_node = v
-            if max_val > 0:
-                pr_result[anchor] = {max_node: max_val}
+                pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': labels[v] if v in labels.keys() else list()})
+            pr_result[anchor]['candidates'] = sorted(pr_result[anchor]['candidates'], key=lambda k: k['score'], reverse=True)
+            pr_result[anchor]['result'] = {'qnode': max_node, 'score': max_val, 'labels': labels[v] if v in labels.keys() else list()}
+            # if max_val > 0:
+            #     pr_result[anchor] = {"qnode": max_node, "score": max_val, "labels":labels}
         graph_data['pr_result'] = pr_result
 
     def process(self, tokens):
