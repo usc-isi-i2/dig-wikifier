@@ -42,14 +42,14 @@ class GraphBuilder():
             edges = graph_data['graph'][anchor]
             total_score = 0
             G.add_node(anchor)
+            new_edges = list()
             for i, edge in enumerate(edges):
                 node, score = edge
                 score = self.redisManager.get(anchor+":"+node)
                 total_score += score
-                if score == 0:
-                    del edges[i]
-                edges[i] = (node, score)
-            edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]
+                if score > 0:
+                    new_edges.append((node, score))
+            edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in new_edges]
             G.add_weighted_edges_from(edges)
             #graph_data['graph'][anchor] = edges
         del graph_data['graph']
