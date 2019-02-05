@@ -42,14 +42,12 @@ class GraphBuilder():
             edges = graph_data['graph'][anchor]
             total_score = 0
             G.add_node(anchor)
-            new_edges = list()
             for i, edge in enumerate(edges):
                 node, score = edge
                 score = self.redisManager.get(anchor+":"+node)
                 total_score += score
-                if score > 0:
-                    new_edges.append((node, score))
-            edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in new_edges]
+                edges[i] = (node, score)
+            edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]
             G.add_weighted_edges_from(edges)
             #graph_data['graph'][anchor] = edges
         del graph_data['graph']
@@ -101,9 +99,9 @@ class GraphBuilder():
                 if res[v] > max_val:
                     max_val = res[v]
                     max_node = v
-                pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': labels[v] if v in labels.keys() else list()})
+                pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': list(labels[v]) if v in labels.keys() else list()})
             pr_result[anchor]['candidates'] = sorted(pr_result[anchor]['candidates'], key=lambda k: k['score'], reverse=True)
-            pr_result[anchor]['result'] = {'qnode': max_node, 'score': max_val, 'labels': labels[v] if v in labels.keys() else list()}
+            pr_result[anchor]['result'] = {'qnode': max_node, 'score': max_val, 'labels': list(labels[v]) if v in labels.keys() else list()}
             # if max_val > 0:
             #     pr_result[anchor] = {"qnode": max_node, "score": max_val, "labels":labels}
         graph_data['pr_result'] = pr_result
