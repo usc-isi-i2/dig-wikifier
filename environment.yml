@@ -1,0 +1,22 @@
+name: wikifier
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.6
+  - pip:
+    - numpy
+    - Flask
+    - Flask-API
+    - flask-cors
+    - requests
+    - redis
+    - hiredis
+    - Flask==1.0.2
+    - Flask-API==1.0
+    - Flask-Compress==1.4.0
+    - Flask-Cors==3.0.6
+    - etk==2.1.4
+    - en-core-web-lg==2.0.0
+    - en-core-web-sm==2.0.0
+    - networkx
