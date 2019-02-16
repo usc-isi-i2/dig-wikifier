@@ -1,6 +1,7 @@
 from storage.redis_manager import RedisManager
 from collections import defaultdict
 import networkx as nx
+from similarity.neighbor_similarity import NeighborSimilarity
 from networkx.readwrite import json_graph
 import sys
 import math
@@ -53,22 +54,13 @@ class GraphBuilder():
         del graph_data['graph']
 
         # Augment graph with edges between concepts if it is allowed.
+        neighbor_similarity = NeighborSimilarity(neighbor_map)
         for first in qnodes:
             total = 0.0
             for second in qnodes:
                 if first != second:
                     sr_score = 1
-                    n1 = neighbor_map[first]
-                    n2 = neighbor_map[second]
-                    inter_val = len(set(n1).intersection(set(n2)))
-                    min_val = min(len(n1), len(n2))
-                    #max_val = max(len(n1), len(n2))
-                    # sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val))) / ( 43000000 - (min_val if min_val <=0 else math.log(min_val)))
-                    # sim_score = ((max_val * 1. if max_val <= 0 else math.log(max_val, 10)) - (
-                    # inter_val * 1. if inter_val <= 0 else math.log(inter_val, 10))) / (
-                    #             math.log(53000000, 10) - (min_val * 1. if min_val <= 0 else math.log(min_val, 10)))
-                    # sr_score = sr_score - sim_score
-                    sr_score = inter_val
+                    sr_score = neighbor_similarity.get_score(first, second)
                     total += sr_score
                     if sr_score > 0:
                         G.add_weighted_edges_from([(first, second, sr_score)])
