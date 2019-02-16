@@ -2,7 +2,7 @@ from .similarity import Similarity
 
 class NeighborSimilarity(Similarity):
     def __init__(self, neighbor_map):
-        Similarity.__init__()
+        super(Similarity,self).__init__()
         self.neighbor_map = neighbor_map
 
     def get_score(self, node1, node2):
