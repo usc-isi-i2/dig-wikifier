@@ -8,7 +8,7 @@ import codecs
 from requests.auth import HTTPBasicAuth
 from extractor import AnchorTextExtractor
 from graph_builder import GraphBuilder
-from .similarity.verse_similarity import VerseSimilarity
+from similarity.verse_similarity import VerseSimilarity
 from flask import jsonify
 
 app = Flask(__name__)
