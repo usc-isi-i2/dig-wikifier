@@ -16,9 +16,14 @@ class VerseSimilarity(Similarity):
 
 
     def get_score(self, node1, node2):
-        idx1 = self.nodemap_rev[node1] if node1 in self.nodemap_rev else None
-        idx2 = self.nodemap_rev[node2] if node2 in self.nodemap_rev else None
+        # Remove 'Q' from the QID
+        key1 = node1[1:]
+        key2 = node2[1:]
+        # Fetch vectors for each Qnode
+        idx1 = self.nodemap_rev[key1] if node1 in self.nodemap_rev else None
+        idx2 = self.nodemap_rev[key2] if node2 in self.nodemap_rev else None
 
+        # If both exist in the index, compute the similarity
         if idx1 and idx2:
             vec1 = self.embeddings[idx1]
             vec2 = self.embeddings[idx2]

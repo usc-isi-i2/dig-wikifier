@@ -8,6 +8,7 @@ import codecs
 from requests.auth import HTTPBasicAuth
 from extractor import AnchorTextExtractor
 from graph_builder import GraphBuilder
+from .similarity.verse_similarity import VerseSimilarity
 from flask import jsonify
 
 app = Flask(__name__)
@@ -20,7 +21,9 @@ redis_host = app.config.get('REDIS_HOST')
 redis_port = app.config.get('REDIS_PORT')
 
 anchor_text_extractor = AnchorTextExtractor()
-graph_builder = GraphBuilder(redis_host, redis_port)
+verse_similarity = VerseSimilarity(app.config.get('VERSE_EMBEDDINGS'), app.config.get('VERSE_NODEMAP'))
+graph_builder = GraphBuilder(redis_host, redis_port, verse_similarity)
+
 print("Initialization complete")
 @app.route('/')
 def home():
@@ -30,7 +33,7 @@ def home():
 def create_bipartite_graph():
     request_data = json.loads(request.data)
     tokens = anchor_text_extractor.extract_tokens(request_data["text"])
-    gp = GraphBuilder.process(tokens=tokens)
+    gp = graph_builder.process(tokens=tokens)
     response = app.response_class(
         response = json.dumps(gp),
         status=200,

@@ -12,7 +12,7 @@ class GlossaryETKModule(ETKModule):
     """
     def __init__(self, etk):
         ETKModule.__init__(self, etk)
-        self.name_extractor = GlossaryExtractor(self.etk.load_glossary("./glossary.txt"), "anchor_extractor",
+        self.name_extractor = GlossaryExtractor(self.etk.load_glossary("./labels_250k.txt"), "anchor_extractor",
                                                 self.etk.default_tokenizer,
                                                 case_sensitive=True, ngrams=4)
     def process_document(self, doc):

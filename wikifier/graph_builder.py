@@ -9,8 +9,9 @@ from flask import Flask, app
 
 
 class GraphBuilder():
-    def __init__(self, host, port):
+    def __init__(self, host, port, verse_similarity):
         self.redisManager = RedisManager(host, port)
+        self.verse_similarity = verse_similarity
 
     def build_graph(self, tokens):
         set_a = set(tokens)
@@ -54,13 +55,13 @@ class GraphBuilder():
         del graph_data['graph']
 
         # Augment graph with edges between concepts if it is allowed.
-        neighbor_similarity = NeighborSimilarity(neighbor_map)
+        # neighbor_similarity = NeighborSimilarity(neighbor_map)
         for first in qnodes:
             total = 0.0
             for second in qnodes:
                 if first != second:
                     sr_score = 1
-                    sr_score = neighbor_similarity.get_score(first, second)
+                    sr_score = self.verse_similarity.get_score(first, second)
                     total += sr_score
                     if sr_score > 0:
                         G.add_weighted_edges_from([(first, second, sr_score)])
