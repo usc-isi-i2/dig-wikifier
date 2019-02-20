@@ -66,9 +66,9 @@ class GraphBuilder():
                     if sr_score > 0:
                         G.add_weighted_edges_from([(first, second, sr_score)])
 
-            for second in qnodes:
-                if second in G[first]:
-                    G[first][second]['weight'] /= total
+            # for second in qnodes:
+            #     if second in G[first]:
+            #         G[first][second]['weight'] /= total
 
         res = nx.pagerank(G, alpha=0.1, weight='weight')
         graph_data['nx'] = dict()
