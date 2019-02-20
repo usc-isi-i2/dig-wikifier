@@ -5,13 +5,13 @@ from collections import defaultdict
 from scipy import spatial
 
 class VerseSimilarity(Similarity):
-    def __init__(self, embeddingsfile, nodemap):
+    def __init__(self, embeddingsfile, nodemapfile):
         super(Similarity,self).__init__()
-        with open(nodemap, 'r') as filereader:
+        with open(nodemapfile, 'r') as filereader:
             self.nodemap = json.loads(filereader.readline())
-        self.embeddings = np.fromfile(embeddingsfile, np.float32).reshape(len(nodemap), 128)
+        self.embeddings = np.fromfile(embeddingsfile, np.float32).reshape(len(self.nodemap), 128)
         self.nodemap_rev = defaultdict()
-        for k, v in nodemap.items():
+        for k, v in self.nodemap.items():
             self.nodemap_rev[v] = k
 
 
