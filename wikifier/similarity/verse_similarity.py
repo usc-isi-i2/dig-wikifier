@@ -5,7 +5,7 @@ from collections import defaultdict
 from scipy import spatial
 
 class VerseSimilarity(Similarity):
-    def __init__(self, nodemap, embeddingsfile):
+    def __init__(self, embeddingsfile, nodemap):
         super(Similarity,self).__init__()
         with open(nodemap, 'r') as filereader:
             self.nodemap = json.loads(filereader.readline())
