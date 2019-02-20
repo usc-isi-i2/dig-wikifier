@@ -6,7 +6,7 @@ import requests
 from optparse import OptionParser
 import codecs
 from requests.auth import HTTPBasicAuth
-from glossary_extractor import AnchorTextExtractor
+from extractor import AnchorTextExtractor
 from graph_builder import GraphBuilder
 from flask import jsonify
 
@@ -30,10 +30,9 @@ def home():
 def create_bipartite_graph():
     request_data = json.loads(request.data)
     tokens = anchor_text_extractor.extract_tokens(request_data["text"])
-    gp = graph_builder.process(tokens)
-    response = app.response_class(
-        response=json.dumps(gp),
+    print(tokens)
+    return app.response_class(
+        response = json.dumps({'tokens': tokens}),
         status=200,
         mimetype='application/json'
     )
-    return response
