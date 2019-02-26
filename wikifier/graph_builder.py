@@ -91,8 +91,8 @@ class GraphBuilder():
                 if res[v] > max_val:
                     max_val = res[v]
                     max_node = v
-                pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': list(labels[v]) if v in labels.keys() else list()})
-            pr_result[anchor]['candidates'] = sorted(pr_result[anchor]['candidates'], key=lambda k: k['score'], reverse=True)
+                #pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': list(labels[v]) if v in labels.keys() else list()})
+            #pr_result[anchor]['candidates'] = sorted(pr_result[anchor]['candidates'], key=lambda k: k['score'], reverse=True)
             pr_result[anchor]['result'] = {'qnode': max_node, 'score': max_val, 'labels': list(labels[v]) if v in labels.keys() else list()}
             # if max_val > 0:
             #     pr_result[anchor] = {"qnode": max_node, "score": max_val, "labels":labels}
