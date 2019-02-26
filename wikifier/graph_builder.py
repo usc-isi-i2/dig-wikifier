@@ -53,22 +53,21 @@ class GraphBuilder():
             G.add_weighted_edges_from(edges)
             #graph_data['graph'][anchor] = edges
         del graph_data['graph']
-
         # Augment graph with edges between concepts if it is allowed.
         # neighbor_similarity = NeighborSimilarity(neighbor_map)
         for first in qnodes:
             total = 0.0
             for second in qnodes:
+                sr_score = 0.0 
                 if first != second:
-                    sr_score = 1
                     sr_score = self.verse_similarity.get_score(first, second)
                     total += sr_score
                     if sr_score > 0:
                         G.add_weighted_edges_from([(first, second, sr_score)])
 
-            # for second in qnodes:
-            #     if second in G[first]:
-            #         G[first][second]['weight'] /= total
+            #for second in qnodes:
+            #    if second in G[first]:
+            #        G[first][second]['weight'] /= total
 
         res = nx.pagerank(G, alpha=0.1, weight='weight')
         graph_data['nx'] = dict()
