@@ -41,7 +41,9 @@ class AnchorTextExtractor():
 
     # Perform same cleaning as what was done while processing wikidata
     def clean(self, st: str):
-        translator = str.maketrans(dict.fromkeys(string.punctuation))
+        punc_dict = dict.fromkeys(string.punctuation)
+        punc_dict['-'] = ''
+        translator = str.maketrans(punc_dict)
         st = ' '.join(st.split()).strip()
         st = st.translate(translator)
         return st
