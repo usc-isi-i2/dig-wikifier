@@ -37,16 +37,30 @@ class AnchorTextExtractor():
         """
         Sets up the class by initializing the glossary extractor which loads the glossary into an in memory trie
         """
-        self.etk = ETK(modules=GlossaryETKModule)
+        self.etk = ETK(modules=GlossaryETKModule, use_spacy_tokenizer=True)
 
     # Perform same cleaning as what was done while processing wikidata
     def clean(self, st: str):
         punc_dict = dict.fromkeys(string.punctuation)
-        punc_dict['-'] = ''
         translator = str.maketrans(punc_dict)
         st = ' '.join(st.split()).strip()
         st = st.translate(translator)
         return st
+
+    def eliminate_sub_mentions(self, arr):
+        arr = sorted(arr, key=lambda x: x['start'])
+        st = []
+        for interval in arr:
+            st.append(interval)
+            while len(st) > 1 and ((st[-1]['start'] <= st[-2]['end']) and (st[-2]['start'] < st[-1]['end'])):
+                t = st.pop()
+                if t['end'] - t['start'] > st[-1]['end'] - st[-1]['start']:
+                    st[-1] = {'text': t['text'], 'start': min(t['start'], st[-1]['start']),
+                              'end': max(t['end'], st[-1]['end'])}
+                else:
+                    st[-1] = {'text': st[-1]['text'], 'start': min(t['start'], st[-1]['start']),
+                              'end': max(t['end'], st[-1]['end'])}
+        return list(st)
 
     def extract_tokens(self, text):
         """
@@ -60,10 +74,17 @@ class AnchorTextExtractor():
         docs = self.etk.process_ems(doc)
         data = list()
         for doc in docs:
-            texts = doc.select_segments("$.anchor_text")
-            for text in texts:
-                data.extend(text.value)
+            extractions = doc.extractions
+            all_names = list()
+            for key,value in extractions.items():
+                for name in value:
+                    all_names.append(
+                        {'text': name.value, 'start': name.provenance['start_char'], 'end': name.provenance['end_char']})
+            extractions = self.eliminate_sub_mentions(all_names)
+            for ext in extractions:
+                data.append(ext['text'])
         end = time.time()
         return data
+
 
 
