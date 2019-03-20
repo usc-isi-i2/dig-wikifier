@@ -72,7 +72,7 @@ class GraphBuilder():
         res = nx.pagerank(G, alpha=0.1, weight='weight')
         graph_data['nx'] = dict()
         pr_result = dict()
-        #graph_data['nx'] = json_graph.node_link_data(G)
+
         # Setting the top node for the graph
 
         # Fetch all labels that are needed
@@ -97,7 +97,8 @@ class GraphBuilder():
             # if max_val > 0:
             #     pr_result[anchor] = {"qnode": max_node, "score": max_val, "labels":labels}
         graph_data['pr_result'] = pr_result
-
+        # Writing pickle to file
+        nx.readwrite.gpickle.write_gpickle(G, 'graph.pickle')
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
         self.compute_edge_scores(graph_data)

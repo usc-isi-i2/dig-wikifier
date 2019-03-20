@@ -22,5 +22,5 @@ class VerseSimilarity(Similarity):
         if idx1 and idx2:
             vec1 = self.embeddings[int(idx1)]
             vec2 = self.embeddings[int(idx2)]
-            return spatial.distance.cosine(vec1, vec2)
+            return 1 - spatial.distance.cosine(vec1, vec2)
         return 0
