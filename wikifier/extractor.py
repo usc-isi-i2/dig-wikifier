@@ -2,7 +2,8 @@ import sys, os, json
 import argparse
 from collections import defaultdict
 from etk.etk import ETK
-from etk.extractors.glossary_extractor import GlossaryExtractor
+#from etk.extractors.glossary_extractor import GlossaryExtractor
+from glossary_extractor import GlossaryExtractor
 from etk.etk_module import ETKModule
 import time, string
 
@@ -12,7 +13,7 @@ class GlossaryETKModule(ETKModule):
     """
     def __init__(self, etk):
         ETKModule.__init__(self, etk)
-        self.name_extractor = GlossaryExtractor(self.etk.load_glossary("./labels_4m.txt"), "anchor_extractor",
+        self.name_extractor = GlossaryExtractor("anchor_extractor",
                                                 self.etk.default_tokenizer,
                                                 case_sensitive=True, ngrams=4)
     def process_document(self, doc):

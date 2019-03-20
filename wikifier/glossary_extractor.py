@@ -73,7 +73,7 @@ class GlossaryExtractor(Extractor):
             ngrams_iter = self._generate_ngrams_with_context(new_tokens)
             results.extend(map(lambda term: self._wrap_value_with_context(tokens, term[1], term[2]),
                                filter(lambda term: isinstance(term[0], str),
-                                      map(lambda term: (self._redisconn.get(self._key_prefix+term[0]), term[1], term[2]),
+                                      map(lambda term: (term[0] if self._redisconn.exists(self._key_prefix+term[0]) else None, term[1], term[2]),
                                           map(lambda term: (
                                               self._combine_ngrams(term[0], self._joiner), term[1], term[2]),
                                               ngrams_iter)))))
