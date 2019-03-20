@@ -36,7 +36,7 @@ class GraphBuilder():
         del graph_data['right']
         del graph_data['left']
 
-        neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
+        #neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
         G = nx.DiGraph()
 
         for anchor in anchors:
@@ -47,6 +47,8 @@ class GraphBuilder():
             for i, edge in enumerate(edges):
                 node, score = edge
                 score = self.redisManager.get(anchor+":"+node)
+                if score:
+                    score = math.log(score,2)
                 total_score += score
                 edges[i] = (node, score)
             edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]
