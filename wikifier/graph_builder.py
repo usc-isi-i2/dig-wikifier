@@ -30,7 +30,7 @@ class GraphBuilder():
         return data
 
 
-    def compute_edge_scores(self, graph_data):
+    def compute_edge_scores(self, graph_data, jsonify=False):
         qnodes = graph_data['right']
         anchors = graph_data['left']
         del graph_data['right']
@@ -103,11 +103,24 @@ class GraphBuilder():
             # if max_val > 0:
             #     pr_result[anchor] = {"qnode": max_node, "score": max_val, "labels":labels}
         graph_data['pr_result'] = pr_result
-        # Writing pickle to file
-        nx.readwrite.gpickle.write_gpickle(G, 'graph.pickle')
+
+        # Returning json_data to file
+
+        if jsonify:
+            node_link_data = nx.readwrite.json_graph.node_link_data
+        else:
+            node_link_data = {}
+
+        return node_link_data
+
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
-        self.compute_edge_scores(graph_data)
+        self.compute_edge_scores(graph_data, jsonify=False)
 
         return graph_data
+
+    def process_nx_graph(self, tokens):
+        graph_data = self.build_graph(tokens)
+        node_link_data = self.compute_edge_scores(graph_data, jsonify=True)
+        return node_link_data
 
