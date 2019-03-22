@@ -64,7 +64,7 @@ class GraphBuilder():
                 if first != second:
                     sr_score = self.verse_similarity.get_score(first, second)
                     total += sr_score
-                    if sr_score > 0:
+                    if sr_score > 0.5:
                         G.add_weighted_edges_from([(first, second, sr_score)])
 
             #for second in qnodes:
