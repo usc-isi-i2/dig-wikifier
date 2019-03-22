@@ -80,6 +80,10 @@ class GraphBuilder():
         # Fetch all labels that are needed
         label_keys = qnodes
         labels = self.redisManager.getKeys(keys=label_keys, prefix="lbl:")
+        # Set score as property in networkx graphs
+        for key in res:
+            if key in G.nodes:
+                G.node[key]['pagerank'] = res[key]
 
         # Construct final result json
         for anchor in anchors:
