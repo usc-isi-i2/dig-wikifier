@@ -107,7 +107,7 @@ class GraphBuilder():
         # Returning json_data to file
 
         if jsonify:
-            node_link_data = nx.readwrite.json_graph.node_link_data
+            node_link_data = nx.readwrite.json_graph.node_link_data(G)
         else:
             node_link_data = dict()
 

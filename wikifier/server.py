@@ -46,7 +46,7 @@ def create_and_return_bipartite_graph():
     request_data = json.loads(request.data)
     tokens = anchor_text_extractor.extract_tokens(request_data["text"])
     gp = graph_builder.process_nx_graph(tokens=tokens)
-    
+
     response = app.response_class(
         response = json.dumps(gp),
         status=200,
