@@ -4,6 +4,7 @@ from collections import defaultdict, OrderedDict
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d","--dictionary")
+parser.add_argument("-b","--blacklist")
 args = parser.parse_args()
 print("Reading neighbor map...")
 data = defaultdict(list)
@@ -14,19 +15,12 @@ print("Neighbor map loaded")
 
 print("Number of keys {}".format(len(data)))
 block = set()
-edge_list = open('edge_list_1m.csv', 'w')
-for key in data:
-    n=0
-    if 'fw' in data[key]:
-        n+=len(data[key]['fw'])
-    if 'bk' in data[key]:
-        n+=len(data[key]['bk'])
-    
-    if n<=30:
-        block.add(key)
+edge_list = open('edge_list_temp.csv', 'w')
+with open(args.blacklist, 'r') as fin:
+    line = fin.readline()
+    block = set(json.loads(line.strip()))
 print("computed blacklist")
 print("Size of blacklist {}".format(len(block)))
-exit(0)
 for key in data:
     if 'fw' in data[key]:
         ids = list(data[key]['fw'])

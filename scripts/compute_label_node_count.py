@@ -14,15 +14,27 @@ labels = json.load(fp)
 print("loaded dictionary of labels")
 label_count_dictionary = defaultdict(int)
 print("Being processing....")
-with gzip.GzipFile('../wikidata.gz', 'r') as fin:
+labelrev = defaultdict(list)
+
+for key in labels:
+    list_of_labels = labels[key]
+    list_of_labels = [x for x in list_of_labels if len(x.split()) < 7]
+    for x in list_of_labels:
+        labelrev[x].append(key)
+with open('candidates_map.json','w') as out:
+    out.write(json.dumps(labelrev))
+
+labelrev.clear()
+print("Completed step 1 : Processing candidates map")
+print("Starting step 2: Processing transition probabilities")
+
+with gzip.GzipFile('wikidata_filtered.gz', 'r') as fin:
     for line in fin:
         linecount+=1
-        if linecount == 0 or len(line) < 5:
-            continue
 
         if linecount % 10000 == 0:
             print(linecount)
-        js = line.strip().decode('utf-8')[:-1]
+        js = line.strip().decode('utf-8')
         try:
             data = json.loads(js)
             # Extract labels based on languages set initially
@@ -45,6 +57,7 @@ with gzip.GzipFile('../wikidata.gz', 'r') as fin:
             for edge in edges:
                 if edge in labels:
                     label_list = labels[edge]
+                    label_list = [x for x in label_list if len(x.split()) < 7]
                     for label in label_list:
                         label_count_dictionary[label+":"+edge]+=1
         except Exception as e:
