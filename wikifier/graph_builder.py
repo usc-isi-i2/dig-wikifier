@@ -3,6 +3,7 @@ from collections import defaultdict
 import networkx as nx
 from similarity.neighbor_similarity import NeighborSimilarity
 from networkx.readwrite import json_graph
+from utils import pagerank
 import sys
 import math
 from flask import Flask, app
@@ -71,7 +72,7 @@ class GraphBuilder():
             #    if second in G[first]:
             #        G[first][second]['weight'] /= total
 
-        res = nx.pagerank(G, alpha=0.1, weight='weight')
+        res = pagerank(G, alpha=0.1, weight='weight')
         graph_data['nx'] = dict()
         pr_result = dict()
 
