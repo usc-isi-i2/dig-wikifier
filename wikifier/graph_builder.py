@@ -71,8 +71,10 @@ class GraphBuilder():
             #for second in qnodes:
             #    if second in G[first]:
             #        G[first][second]['weight'] /= total
-
-        res = pagerank(G, alpha=0.1, weight='weight')
+        scores = dict()
+        for node in G.nodes:
+            scores[node] = 1000
+        res = pagerank(G, alpha=0.1, weight='weight', nstart=scores)
         graph_data['nx'] = dict()
         pr_result = dict()
 
