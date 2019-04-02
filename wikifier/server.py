@@ -53,3 +53,25 @@ def create_and_return_bipartite_graph():
         mimetype='application/json'
     )
     return response
+
+@app.route('/get_properties', methods=['POST'])
+def get_properties():
+    request_data = json.loads(request.data)
+    data = graph_builder.get_properties(request_data)
+    response = app.response_class(
+        response = json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@app.route('/get_similarity_score', methods=['POST'])
+def get_similarity_score():
+    request_data = json.loads(request.data)
+    data = graph_builder.get_similarity(request_data)
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
