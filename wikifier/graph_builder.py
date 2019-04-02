@@ -30,6 +30,22 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
+    def get_qnode_properties(self, list_of_qnodes):
+        """
+        :param list_of_qnodes : List of qnodes to fetch their properties
+
+        :returns A dictionary with qnodes as keys and list of properties as value.
+        """
+        property_map = self.redisManager.getKeys(list_of_qnodes, "prop:")
+        return property_map
+
+    def get_similarity(self, qnodes):
+        """
+        :param takes a list of 2 qnode ids
+        :return: a score for the similarity between the two qnodes
+        """
+        score = self.verse_similarity.get_score(*(qnodes))
+        return score
 
     def compute_edge_scores(self, graph_data, jsonify=False):
         qnodes = graph_data['right']
