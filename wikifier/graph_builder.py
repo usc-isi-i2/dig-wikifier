@@ -37,7 +37,10 @@ class GraphBuilder():
         :returns A dictionary with qnodes as keys and list of properties as value.
         """
         property_map = self.redisManager.getKeys(list_of_qnodes, "prop:")
-        return property_map
+        rmap = dict()
+        for key in property_map:
+            rmap[key] = list(property_map[key])
+        return rmap
 
     def get_similarity(self, qnodes):
         """
