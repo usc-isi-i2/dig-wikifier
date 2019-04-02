@@ -16,13 +16,11 @@ def pagerank(G, alpha=0.85, personalization=None,
     # Create a copy in (right) stochastic form
     W = nx.stochastic_graph(D, weight=weight)
     N = W.number_of_nodes()
-
     # Choose fixed starting vector if not given
     if nstart is None:
         x = dict.fromkeys(W, 1.0 / N)
     else:
         # Normalized nstart vector
-        s = float(sum(nstart.values()))
         x = dict((k, v) for k, v in nstart.items())
 
     if personalization is None:
