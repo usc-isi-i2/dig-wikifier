@@ -1,15 +1,18 @@
 from storage.redis_manager import RedisManager
 from collections import defaultdict
 import networkx as nx
+from similarity.neighbor_similarity import NeighborSimilarity
 from networkx.readwrite import json_graph
+from utils import pagerank
 import sys
 import math
 from flask import Flask, app
 
 
 class GraphBuilder():
-    def __init__(self, host, port):
+    def __init__(self, host, port, verse_similarity):
         self.redisManager = RedisManager(host, port)
+        self.verse_similarity = verse_similarity
 
     def build_graph(self, tokens):
         set_a = set(tokens)
@@ -27,14 +30,33 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
+    def get_qnode_properties(self, list_of_qnodes):
+        """
+        :param list_of_qnodes : List of qnodes to fetch their properties
 
-    def compute_edge_scores(self, graph_data):
+        :returns A dictionary with qnodes as keys and list of properties as value.
+        """
+        property_map = self.redisManager.getKeys(list_of_qnodes, "prop:")
+        rmap = dict()
+        for key in property_map:
+            rmap[key] = list(property_map[key])
+        return rmap
+
+    def get_similarity(self, qnodes):
+        """
+        :param takes a list of 2 qnode ids
+        :return: a score for the similarity between the two qnodes
+        """
+        score = self.verse_similarity.get_score(*(qnodes))
+        return score
+
+    def compute_edge_scores(self, graph_data, jsonify=False):
         qnodes = graph_data['right']
         anchors = graph_data['left']
         del graph_data['right']
         del graph_data['left']
 
-        neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
+        #neighbor_map = self.redisManager.getKeys(qnodes, prefix="all:")
         G = nx.DiGraph()
 
         for anchor in anchors:
@@ -45,47 +67,45 @@ class GraphBuilder():
             for i, edge in enumerate(edges):
                 node, score = edge
                 score = self.redisManager.get(anchor+":"+node)
+                if score:
+                    score = math.log(score,2)
                 total_score += score
                 edges[i] = (node, score)
             edges = [(anchor, edge[0], (1. * edge[1] / total_score) if total_score else 0) for edge in edges]
             G.add_weighted_edges_from(edges)
             #graph_data['graph'][anchor] = edges
         del graph_data['graph']
-
         # Augment graph with edges between concepts if it is allowed.
+        # neighbor_similarity = NeighborSimilarity(neighbor_map)
         for first in qnodes:
             total = 0.0
             for second in qnodes:
+                sr_score = 0.0 
                 if first != second:
-                    sr_score = 1
-                    n1 = neighbor_map[first]
-                    n2 = neighbor_map[second]
-                    inter_val = len(set(n1).intersection(set(n2)))
-                    min_val = min(len(n1), len(n2))
-                    #max_val = max(len(n1), len(n2))
-                    # sim_score = ( math.log(max(len(n1), len(n2)),10) - (inter_val if inter_val <=0 else math.log(inter_val))) / ( 43000000 - (min_val if min_val <=0 else math.log(min_val)))
-                    # sim_score = ((max_val * 1. if max_val <= 0 else math.log(max_val, 10)) - (
-                    # inter_val * 1. if inter_val <= 0 else math.log(inter_val, 10))) / (
-                    #             math.log(53000000, 10) - (min_val * 1. if min_val <= 0 else math.log(min_val, 10)))
-                    # sr_score = sr_score - sim_score
-                    sr_score = inter_val
+                    sr_score = self.verse_similarity.get_score(first, second)
                     total += sr_score
-                    if sr_score > 0:
+                    if sr_score > 0.5:
                         G.add_weighted_edges_from([(first, second, sr_score)])
 
-            for second in qnodes:
-                if second in G[first]:
-                    G[first][second]['weight'] /= total
-
-        res = nx.pagerank(G, alpha=0.1, weight='weight')
+            #for second in qnodes:
+            #    if second in G[first]:
+            #        G[first][second]['weight'] /= total
+        scores = dict()
+        for node in G.nodes:
+            scores[node] = 1000
+        res = pagerank(G, alpha=0.1, weight='weight', nstart=scores)
         graph_data['nx'] = dict()
         pr_result = dict()
-        #graph_data['nx'] = json_graph.node_link_data(G)
+
         # Setting the top node for the graph
 
         # Fetch all labels that are needed
         label_keys = qnodes
         labels = self.redisManager.getKeys(keys=label_keys, prefix="lbl:")
+        # Set score as property in networkx graphs
+        for key in res:
+            if key in G.nodes:
+                G.node[key]['pagerank'] = res[key]
 
         # Construct final result json
         for anchor in anchors:
@@ -99,16 +119,30 @@ class GraphBuilder():
                 if res[v] > max_val:
                     max_val = res[v]
                     max_node = v
-                pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': list(labels[v]) if v in labels.keys() else list()})
-            pr_result[anchor]['candidates'] = sorted(pr_result[anchor]['candidates'], key=lambda k: k['score'], reverse=True)
-            pr_result[anchor]['result'] = {'qnode': max_node, 'score': max_val, 'labels': list(labels[v]) if v in labels.keys() else list()}
+                #pr_result[anchor]['candidates'].append({'qnode': v, 'score': res[v], 'labels': list(labels[v]) if v in labels.keys() else list()})
+            #pr_result[anchor]['candidates'] = sorted(pr_result[anchor]['candidates'], key=lambda k: k['score'], reverse=True)
+            pr_result[anchor]['result'] = {'qnode': max_node, 'score': max_val, 'labels': list(labels[max_node]) if max_node in labels.keys() else list()}
             # if max_val > 0:
             #     pr_result[anchor] = {"qnode": max_node, "score": max_val, "labels":labels}
         graph_data['pr_result'] = pr_result
 
+        # Returning json_data to file
+
+        if jsonify:
+            node_link_data = nx.readwrite.json_graph.node_link_data(G)
+        else:
+            node_link_data = dict()
+
+        return node_link_data
+
     def process(self, tokens):
         graph_data = self.build_graph(tokens)
-        self.compute_edge_scores(graph_data)
+        self.compute_edge_scores(graph_data, jsonify=False)
 
         return graph_data
+
+    def process_nx_graph(self, tokens):
+        graph_data = self.build_graph(tokens)
+        node_link_data = self.compute_edge_scores(graph_data, jsonify=True)
+        return node_link_data
 
