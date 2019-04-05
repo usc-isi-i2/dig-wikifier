@@ -57,7 +57,7 @@ def create_and_return_bipartite_graph():
 @app.route('/get_properties', methods=['POST'])
 def get_properties():
     request_data = json.loads(request.data)
-    data = graph_builder.get_properties(request_data)
+    data = graph_builder.get_qnode_properties(request_data)
     response = app.response_class(
         response = json.dumps(data),
         status=200,
