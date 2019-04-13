@@ -47,7 +47,7 @@ class GraphBuilder():
                 for x in filter_props:
                     if x in statements.keys():
                         final_data[x] = statements[x]
-                data[key] = statements
+                data[key] = final_data
         return data
 
     def get_qnode_properties(self, list_of_qnodes):
