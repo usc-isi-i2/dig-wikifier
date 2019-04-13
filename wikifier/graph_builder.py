@@ -30,6 +30,26 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
+
+    def get_statements(self, data):
+        ids = data['ids'] if 'ids' in data.keys() else {}
+        props = data['properties'] if 'properties' in data.keys() else {}
+        # Check empty
+        if not ids:
+            return {}
+        data = self.redisManager.getKeysAsJson(keys=ids, prefix="statements:")
+        # Filter the properties.
+        filter_props = set(props)
+        if filter_props:
+            for key in data:
+                statements = data[key]
+                final_data = dict()
+                for x in props:
+                    if x in statements.keys():
+                        final_data[x] = statements[x]
+                data[key] = statements
+        return data
+
     def get_qnode_properties(self, list_of_qnodes):
         """
         :param list_of_qnodes : List of qnodes to fetch their properties
