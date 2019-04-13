@@ -44,7 +44,7 @@ class GraphBuilder():
             for key in data:
                 statements = data[key]
                 final_data = dict()
-                for x in props:
+                for x in filter_props:
                     if x in statements.keys():
                         final_data[x] = statements[x]
                 data[key] = statements
