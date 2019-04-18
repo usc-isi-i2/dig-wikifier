@@ -35,7 +35,7 @@ class GraphBuilder():
         # Check empty
         if not ids:
             return {}
-        data = self.redisManager.getKeys(keys=ids, prefix="identifier:")
+        data = self.redisManager.getKeys(keys=ids, prefix="identifiers:")
         final = dict()
         for key in data:
             final[key] = list(data[key])
