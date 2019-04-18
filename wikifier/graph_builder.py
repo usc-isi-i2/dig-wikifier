@@ -36,7 +36,10 @@ class GraphBuilder():
         if not ids:
             return {}
         data = self.redisManager.getKeys(keys=ids, prefix="identifier:")
-        return data
+        final = dict()
+        for key in data:
+            final[key] = list(data[key])
+        return final
 
     def get_statements(self, data):
         ids = data['ids'] if 'ids' in data.keys() else {}
