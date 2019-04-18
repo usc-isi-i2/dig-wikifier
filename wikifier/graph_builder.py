@@ -30,6 +30,13 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
+    def get_identifiers(self,data):
+        ids = data['ids'] if 'ids' in data.keys() else {}
+        # Check empty
+        if not ids:
+            return {}
+        data = self.redisManager.getKeys(keys=ids, prefix="identifier:")
+        return data
 
     def get_statements(self, data):
         ids = data['ids'] if 'ids' in data.keys() else {}

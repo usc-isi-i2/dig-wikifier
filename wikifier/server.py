@@ -86,3 +86,14 @@ def get_statements():
         mimetype='application/json'
     )
     return response
+
+@app.route('/get_identifiers', methods=['POST'])
+def get_identifiers():
+    request_data = json.loads(request.data)
+    data = graph_builder.get_identifiers(request_data)
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
