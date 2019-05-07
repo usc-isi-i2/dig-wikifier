@@ -1,8 +1,22 @@
 import gzip, json, os , sys
 import re
 from collections import defaultdict
+import argparse
+
+"""
+This script is one of the main scripts to process Wikidata. This script goes through the json dump of Wikidata and constructs a dictionary of Qnodes with its corresponding properties and edges. It serves as the intermediary structure that can be assumed to be a representation of the entire wikidata graph with properties minus the additional information (like aliases, labels etc)
+Note : Script operates only on the gzipped wikidata json dumps.
+
+"""
+
 linecount = -1
 mapOfNeighbors = defaultdict(dict)
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-w","--wikidatapath")
+parser.add_argument("-o","--output")
+
+args = parser.parse_args()
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
@@ -26,7 +40,7 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
         print()
 
 
-with gzip.GzipFile('../wikidata.gz', 'r') as fin:
+with gzip.GzipFile(args.wikidatapath, 'r') as fin:
     for line in fin:
         linecount+=1
         if linecount == 0 or len(line) < 5:
@@ -58,7 +72,7 @@ with gzip.GzipFile('../wikidata.gz', 'r') as fin:
         except Exception as e:
             print("Error while loading a json line {}".format(e.args))
         
-with open("neighbor_map_with_properties.json","w") as out:
+with open(args.output,"w") as out:
     out.write(json.dumps(mapOfNeighbors))
 
 print("Done")
