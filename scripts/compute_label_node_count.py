@@ -1,6 +1,18 @@
 import gzip, json, os , sys
 import re
+import argparse
 from collections import defaultdict
+"""
+This script computes the counts necessary to compute trainsition probabilities in the wikifier algorithm. It will capture the counts of a particular label:Qnode combination and store that in a dictionary format
+
+"""
+parser = argparse.ArgumentParser()
+parser.add_argument("-l","--labelmap")
+parser.add_argument("-o","--output")
+parser.add_argument("-w","--wikidatapath")
+
+args = parser.parse_args()
+
 linecount = -1
 mapOfNeighbors = defaultdict(list)
 
@@ -9,7 +21,7 @@ languages = ['en']
 def clean(string: str):
     string = ' '.join(string.split()).strip()
     return string
-fp = open("label_map.json",'r')
+fp = open(args.labelmap,'r')
 labels = json.load(fp)
 print("loaded dictionary of labels")
 label_count_dictionary = defaultdict(int)
@@ -21,6 +33,7 @@ for key in labels:
     list_of_labels = [x for x in list_of_labels if len(x.split()) < 7]
     for x in list_of_labels:
         labelrev[x].append(key)
+# Generates a reverse mapping from the labels to qnodes, which can be used for a reverse lookup to see what qnodes will be the possible candidates given a phrase
 with open('candidates_map.json','w') as out:
     out.write(json.dumps(labelrev))
 
@@ -28,7 +41,7 @@ labelrev.clear()
 print("Completed step 1 : Processing candidates map")
 print("Starting step 2: Processing transition probabilities")
 
-with gzip.GzipFile('wikidata_filtered.gz', 'r') as fin:
+with gzip.GzipFile(args.wikidatapath, 'r') as fin:
     for line in fin:
         linecount+=1
 
@@ -62,7 +75,7 @@ with gzip.GzipFile('wikidata_filtered.gz', 'r') as fin:
                         label_count_dictionary[label+":"+edge]+=1
         except Exception as e:
             print("Error while loading a json line {}".format(e.args))
-with open("label_count_map.json","w") as out:
+with open(args.output,"w") as out:
     out.write(json.dumps(label_count_dictionary))
 
 print("Done")
