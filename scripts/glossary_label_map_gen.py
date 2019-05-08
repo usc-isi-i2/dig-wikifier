@@ -1,6 +1,19 @@
 import gzip, json, os , sys
 import re
 from collections import defaultdict
+import argparse
+
+"""
+This script is used to operate on the gzipped version of the Wikidata json dumps, process each of the entities and extract their labels and perfrom some simple cleaning operations on the labels as well. The script outputs a dictionary containing all the labels for a given qnode, currently just focuses on the 'en'(English) labels in wikidata. Add more languages to that list to process labels of other languages as well. 
+"""
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-w","--wikidatapath")
+parser.add_argument("-l","--labelout")
+parser.add_argument("-g","--glossaryout")
+
+args = parser.parse_args()
+
 mapOflabels = defaultdict(list)
 
 # Add all the languages that we want to extract here
@@ -11,7 +24,7 @@ def clean(string: str):
     return string
 #logfile = open('run.log', 'a')
 print("Starting file processing ......")
-with gzip.GzipFile('wikidata.gz', 'r') as fin:
+with gzip.GzipFile(args.wikidatapath, 'r') as fin:
     for linecount,line in enumerate(fin):
 
         try:
@@ -40,10 +53,10 @@ with gzip.GzipFile('wikidata.gz', 'r') as fin:
 
 print("Writing output to file...")
 
-with open("label_map.json","w") as out:
+with open(args.labelout,"w") as out:
     out.write(json.dumps(mapOflabels))
 
-with open("glossary.txt","w") as outfile:
+with open(args.glossaryout,"w") as outfile:
     for word in glossary:
         outfile.write(word + "\n")
 

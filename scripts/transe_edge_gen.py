@@ -5,7 +5,7 @@ import argparse
 
 
 """
-Script that generates the 3 files required for transX embedding training. Given a graph, it will generate the vertex, edge and property lists in the required format
+Script that generates the 3 files required for transX embedding training on CPU using KB2E - https://github.com/thunlp/KB2E . Given a graph, it will generate the vertex, edge and property lists in the required format
 """
 parser = argparse.ArgumentParser()
 parser.add_argument("-d","--dictionary")
