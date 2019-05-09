@@ -31,6 +31,7 @@ following repository -
 ### Usage
 ```
 python generate_transx_gpu_input.py --d inputfile.json
+```
 
 ## generate a set of random walks
 
