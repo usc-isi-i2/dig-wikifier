@@ -3,6 +3,9 @@ import argparse
 from collections import defaultdict
 import time
 import redis
+"""
+This script is used for loading/unloading from redis. Some commented code shows how we delete keys from redis given a dictionary and how we load a dictionary into redis. This script has been used to load the edge maps, label maps, transition probabilities, properties for qnodes all into redis. Requires a redis server setup and running
+"""
 
 # Install dependencies hiredis, redis
 
@@ -40,8 +43,8 @@ if __name__ == "__main__":
     print("Begin loading data ..............")
     #data = json.load(open(args.dictionary),object_pairs_hook=defaultdict)
     with open(args.dictionary, 'r') as fin:
-        line = fin.readline()
-        d = json.loads(line)
+        #line = fin.readline()
+        d = json.load(fin)
         data = defaultdict(list,d)
     print("Done Loading")
     print("Start writing {} keys to redis : ".format(len(data)))
@@ -52,30 +55,34 @@ if __name__ == "__main__":
     i=0
     for key in data:
         #print("all:" + key)
-        #rkey = "lbl:" +key
-        rkey = key
+        rkey = "identifiers_v5:" +key
+        #rkey = key
         i+=1
         if i%10000 == 0:
             printProgressBar(i, len(data), prefix = 'Progress:', suffix = 'Complete', length = 50)
         try:
             #print("{}->{}".format(rkey, data[key]))
-            labels = data[key]
-            for label in labels:
-                r.delete("old_data:"+label)
+            #labels = data[key]
+            #for label in labels:
+            #r.delete(rkey)
+            #d = data[key]
+            #print("Storing at {} data - {}".format(rkey,d))
+            #r.set(rkey, json.dumps(d))
             #print("Passing {} and {}".format(rkey, len(data[key])))
-            #if len(data[key]) < 500:
-                #print("Passing {} and {}".format(rkey, len(data[key])))
-            #    r.sadd(rkey, *(data[key]))
-            #else:
-            #    d = list()
-            #    d = data[key]
-            #    while len(d)>0:
-            #        p = d[:500]
-            #        d = d[500:]
-            #        r.sadd(rkey, *p)
+            if len(data[key]) < 500:
+                #print("Passing {} and {}".format(rkey, data[key]))
+                #exit(0)
+                r.sadd(rkey, *(data[key]))
+            else:
+                d = list()
+                d = data[key]
+                while len(d)>0:
+                    p = d[:500]
+                    d = d[500:]
+                    r.sadd(rkey, *p)
                 #print("Completed loop")
         except Exception as e:
-            print("Error wile processing {}".format(e))
+            print("Error wile processing key{} with {}".format(rkey, e))
             pass
     print("\nCompleted inserting to redis")
     print("\nNumber of keys {}".format(len(data)))

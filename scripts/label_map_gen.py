@@ -1,7 +1,18 @@
 import gzip, json, os , sys
 import re
 from collections import defaultdict
-import string
+import string, argparse
+"""
+
+This script operates on the gzipped wikidata json dumps and extracts labels for each Qnode entity in wikidata. Stores the result as a dictionary of lists.
+
+"""
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-w","--wikidatapath")
+parser.add_argument("-l","--labelout")
+
+args = parser.parse_args()
 
 mapOflabels = defaultdict(list)
 
@@ -9,10 +20,12 @@ mapOflabels = defaultdict(list)
 languages = ['en']
 glossary = set()
 def clean(string: str):
+    # Cleans rogue whitespaces, tabs etc.
     string = ' '.join(string.split()).strip()
     return string
 
 def clean2(st: str):
+    # This function just removes a punctuation from a string
     punc_dict = dict.fromkeys(string.punctuation)
     translator = str.maketrans(punc_dict)
     st = ' '.join(st.split()).strip()
@@ -20,7 +33,7 @@ def clean2(st: str):
     return st
     
 print("Starting file processing ......")
-with gzip.GzipFile('wikidata_filtered.gz', 'r') as fin:
+with gzip.GzipFile(args.wikidatapath, 'r') as fin:
     for linecount,line in enumerate(fin):
         try:
             js = line.strip().decode('utf-8')
@@ -50,6 +63,6 @@ with gzip.GzipFile('wikidata_filtered.gz', 'r') as fin:
 
 print("Writing output to file...")
 
-with open("label_map.json","w") as out:
+with open(args.labelout,"w") as out:
     out.write(json.dumps(mapOflabels))
 
