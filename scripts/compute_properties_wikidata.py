@@ -4,19 +4,26 @@ from collections import defaultdict
 import argparse
 
 """
-This script is one of the main scripts to process Wikidata. This script goes through the json dump of Wikidata and constructs a dictionary of Qnodes with its corresponding properties and edges. It serves as the intermediary structure that can be assumed to be a representation of the entire wikidata graph with properties minus the additional information (like aliases, labels etc)
-Note : Script operates only on the gzipped wikidata json dumps.
-
+This script computes a dictionary representing qnodes and the list of properties that they have described in their 'claims'. The script requires the path to the gzip compressed wikidata json dumps and executes the operation on that script.
 """
-
-linecount = -1
-mapOfNeighbors = defaultdict(dict)
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-w","--wikidatapath")
 parser.add_argument("-o","--output")
-
+parser.add_argument("-a","--whitelist")
 args = parser.parse_args()
+
+
+linecount = -1
+mapOfNeighbors = defaultdict(list)
+
+# This is a set of properties that we care about, and we will check only these properties while processing each Qnode.
+# the file must contain several properties stored one per line as - http://wikidata.org/wiki/P123123 etc
+
+allowed = set()
+# Read blocked here - 
+with open(args.whitelist,'r') as fin:
+    for line in fin:
+        allowed.add(line.strip().split('/')[-1])
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
@@ -36,9 +43,13 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     bar = fill * filledLength + '-' * (length - filledLength)
     print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
     # Print New Line on Complete
-    if iteration == total:
+    if iteration == total: 
         print()
 
+# The property map structure here
+pmap = defaultdict(list)
+
+print("Size of property whitelist is {}".format(len(allowed)))
 
 with gzip.GzipFile(args.wikidatapath, 'r') as fin:
     for line in fin:
@@ -47,32 +58,21 @@ with gzip.GzipFile(args.wikidatapath, 'r') as fin:
             continue
 
         if linecount % 10000 == 0:
-            printProgressBar(linecount, 52000000, prefix = 'Progress:', suffix = 'Complete', length = 50)
+            printProgressBar(linecount, 53000000, prefix = 'Progress:', suffix = 'Complete', length = 50)
         js = line.strip().decode('utf-8')[:-1]
         try:
             data = json.loads(js)
             # Extract labels based on languages set initially
             doc_id = data['id']
+            if doc_id.startswith('P'):
+                continue
             statements = data['claims']
-            statement_map = defaultdict(list)
-            for statement in statements:
-                val = statements[statement]
-                assert isinstance(val, list), "This should be list"
-                for details in val:
-                    if details['type'] == "statement" and 'mainsnak' in details.keys():
-                        if details['mainsnak'] != {} and details['mainsnak']['datatype'] == 'wikibase-item' and details['mainsnak']['snaktype']=='value':
-                            try:
-                                id = details['mainsnak']['datavalue']['value']['id']
-                                #mapOfNeighbors[id].append(doc_id)
-                                statement_map[statement].append(id)
-                            except Exception as e:
-                                print("Exception while processing, but continuing {}".format(e.args))
-                                pass
-            mapOfNeighbors[doc_id] = statement_map
+            properties = set(statements.keys())
+            found_props = list(properties.intersection(allowed))
+            pmap[doc_id] = found_props
         except Exception as e:
             print("Error while loading a json line {}".format(e.args))
-        
 with open(args.output,"w") as out:
-    out.write(json.dumps(mapOfNeighbors))
+    out.write(json.dumps(pmap))
 
 print("Done")

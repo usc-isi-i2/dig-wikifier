@@ -2,6 +2,10 @@ import json, os, requests, copy
 from collections import defaultdict
 import redis
 
+"""
+This script calls the wikifier with a set of queries, compares it with the ground truth to compute precision, recall and F-score. Look at annotations.json for a sample of how the annotations look like. 
+
+"""
 data = defaultdict()
 
 redis_client = redis.StrictRedis(
