@@ -13,6 +13,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-x","--host")
 parser.add_argument("-p","--port")
 parser.add_argument("-d","--dictionary")
+parser.add_argument("-t","--type")
+parser.add_argument("-v","--prefix")
 args = parser.parse_args()
 
 # Print iterations progress
@@ -39,6 +41,7 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 
 if __name__ == "__main__":
 
+    assert args.type in ["NUMBER","SET","JSON","DELETE"]
     data = defaultdict(list)
     print("Begin loading data ..............")
     #data = json.load(open(args.dictionary),object_pairs_hook=defaultdict)
@@ -54,33 +57,30 @@ if __name__ == "__main__":
     print("redis connection established")
     i=0
     for key in data:
-        #print("all:" + key)
-        rkey = "identifiers_v5:" +key
-        #rkey = key
+        rkey = args.prefix +key
         i+=1
         if i%10000 == 0:
             printProgressBar(i, len(data), prefix = 'Progress:', suffix = 'Complete', length = 50)
         try:
-            #print("{}->{}".format(rkey, data[key]))
-            #labels = data[key]
-            #for label in labels:
-            #r.delete(rkey)
-            #d = data[key]
-            #print("Storing at {} data - {}".format(rkey,d))
-            #r.set(rkey, json.dumps(d))
-            #print("Passing {} and {}".format(rkey, len(data[key])))
-            if len(data[key]) < 500:
-                #print("Passing {} and {}".format(rkey, data[key]))
-                #exit(0)
-                r.sadd(rkey, *(data[key]))
-            else:
-                d = list()
+            if args.type == "NUMBER":
+                r.set(rkey, d)
+            elif args.type == "SET":
+                if len(data[key]) < 500:
+                    # print("Passing {} and {}".format(rkey, data[key]))
+                    # exit(0)
+                    r.sadd(rkey, *(data[key]))
+                else:
+                    d = list()
+                    d = data[key]
+                    while len(d) > 0:
+                        p = d[:500]
+                        d = d[500:]
+                        r.sadd(rkey, *p)
+            elif args.type == "JSON":
                 d = data[key]
-                while len(d)>0:
-                    p = d[:500]
-                    d = d[500:]
-                    r.sadd(rkey, *p)
-                #print("Completed loop")
+                r.set(rkey, json.dumps(d))
+            elif args.type == "DEL":
+                r.delete(rkey)
         except Exception as e:
             print("Error wile processing key{} with {}".format(rkey, e))
             pass
