@@ -104,6 +104,7 @@ Store the embeddings in one of the locations and pass the location in the `wikif
 before trying to start the service using `run_wikifier.sh`
 
 Current properties can be found [here](https://github.com/usc-isi-i2/dig-wikifier/blob/master/wikifier/wikifier.cfg)
+The config file is `wikifier/wikifier.cfg`
 
 Once all the above steps have been completed, we can proceed to run the starter script `run_wikifier.sh` which should start the service on the
 specified port in the config
