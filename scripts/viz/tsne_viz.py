@@ -69,4 +69,4 @@ tsne_model_en_2d = TSNE(perplexity=15, n_components=2, init='pca', n_iter=5000, 
 embeddings_en_2d = np.array(tsne_model_en_2d.fit_transform(embedding_clusters.reshape(n*m, k))).reshape(n,m,2)
 
 tsne_plot_similar_words('Embeddings Biggraph-Pytorch(FB) for film graph nodes', keys, embeddings_en_2d, word_clusters, 0.7,
-                        'similar_words.png')
+                        'output.png')

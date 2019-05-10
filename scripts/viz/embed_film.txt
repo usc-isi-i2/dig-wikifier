@@ -1,0 +1,240 @@
+Q7281,propaganda
+Q18620604,dramatization
+Q22763,9/11 complicity theory
+Q544440,Filmi
+Q1723850,cannibal film
+Q208555,parable
+Q1366112,dramatic programming
+Q145806,stand-up comedy
+Q1107,anime
+Q2894452,mashup novel
+Q23916,adventure video game
+Q373342,popular music
+Q189177,3-D
+Q580013,Bruceploitation
+Q853630,slasher
+Q191489,melodrama
+Q1004,comics
+Q4674071,Acid Western
+Q535518,Nazi exploitation
+Q596138,educational video
+Q47138336,Reckless Passion
+Q7771046,The Ugly Boy
+Q4514940,Garv
+Q5840179,Esperando la carroza 2
+Q7719876,The Brave Archer 3
+Q5679390,Haso Haso Ai Duniyawallaon
+Q6407469,Killer Darts
+Q4982326,Time Traveller: The Girl Who Leapt Through Time
+Q16250071,Kandavarundo
+Q24895995,Sassy Sue
+Q2084117,De Nieuwe Avonturen van Dik Trom
+Q26720654,New Happy Dad and Son 2: The Instant Genius
+Q25471409,Triangle the Dark Side
+Q7340832,Robbery Under Arms
+Q4083110,National Geographic White Wolf
+Q7741295,The Iceman Cometh
+Q48953579,The Perfect Ones
+Q21646226,Chatterbox
+Q4753466,Andaaz
+Q30126702,Scared Topless
+Q3534162,Prasanna
+Q21480423,Gerald Richardson Roberts
+Q2311176,Annette Dutertre
+Q5619045,Gunnar Höglund
+Q11454127,Ryūji Miyajima
+Q11465891,Kenji Yamashita
+Q26916860,Kenneth van Schooten
+Q15453652,David Gamble
+Q7184361,Philip Sgriccia
+Q840437,Joel Cox
+Q38402741,Henrik Fleischer
+Q464015,Dylan Tichenor
+Q2095959,Pino Mercanti
+Q3816118,Mercedes Alvarez
+Q6961113,남나영
+Q51127,Carl Th. Dreyer
+Q3369886,Patrick Tam
+Q7326067,Richard Greer
+Q8943896,Hsiao-Tung Chen
+Q24706233,Joseph Ryan
+Q4117042,Masaru Ikeda
+Q90621,Kurt Ulrich
+Q5425330,FEFSI Vijayan
+Q1445597,Steve Barclay
+Q5589345,Government of West Bengal
+Q342252,Michael Rapaport
+Q220308,Seth Rogen
+Q709913,Arthur Hornblow Jr
+Q148669,Ida Lupino
+Q722418,Giulio Petroni
+Q7403109,Sakthi Chidambaram
+Q3173446,Jean Mascolo
+Q17007964,Nathan Hill
+Q602595,Renato Polselli
+Q7703458,Terrence E McNally
+Q371403,Kyle Richard Gass
+Q16195262,Brad Pelo
+Q4706259,Alan Brown
+Q513644,Ray Ventura
+Q15431922,John Sloss
+Q20871220,Ellis W. Carter
+Q4758107,Andrew Neel
+Q13110623,M. R. Rajakrishnan
+Q16013371,Kamal Bose
+Q3749702,Francesco Calabro
+Q1948483,Morris Engel
+Q24631404,Beth B
+Q16731753,Dan Macarthur
+Q2712782,Harold E Stine
+Q6968647,Nate Gold
+Q26034783,Elena Somarè
+Q12488092,Joshua Wong
+Q6847433,Mike Jones
+Q2343577,Khavn De La Cruz
+Q84116,Zuzana Piussi
+Q62503,Victor Fleming
+Q12301076,Allan de Waal
+Q33437278,Saul Shapiro
+Q472343,Amit Bhattacharya
+Q17167552,George Richmond
+Q52750108,Lucito Capoluogo
+Q2944856,Pearson Peacekeeping Centre
+Q8026244,Winter Haven Christian School
+Q7432544,School of Visual Arts and Design of Puerto Rico
+Q23053389,Shalom Junior Primary School
+Q23198688,Lyama Primary School
+Q52807423,Ten RDavia
+Q52827744,I.C. N.3 Lame
+Q52781983,Villa Verrocchio
+Q52977479,Dallolio
+Q6790958,Matthew McNair Secondary School
+Q28447154,Logan City School District
+Q23134228,Sunlight Primary School
+Q52852457,ICSettimo VittoneAndrate
+Q16899085,R.B. Govt. High School
+Q4208086,Kazakh Agro Technical University
+Q24040184,Randolph Southern Junior-Senior High School
+Q23090544,Nsagi Islamic Primary School
+Q7999727,Wigton School
+Q55449596,Maastricht Centre for Systems Biology
+Q165518,Ewan McGregor
+Q4955063,Bradley Walsh
+Q3860086,Mohamed Abderrahman Tazi
+Q6173805,Jeff Fatt
+Q16552052,Enrico Bernard
+Q27553620,Roberto Lione
+Q7356295,Rod McDonald
+Q27043713,Naomi Zola
+Q33155557,Mads Kamp Thulstrup
+Q30076233,Alessandro Fabrizi
+Q5218079,Daniel Maze
+Q1040798,Rossano Brazzi
+Q24686314,Jan Jaap Kuiper
+Q7803256,Tim Burstall
+Q12274689,Vassil Gendov
+Q26133495,Ralitza Petrova
+Q23805924,Michael Loeken
+Q2555171,Tonie Marshall
+Q12838346,Camil Quliyev
+Q50059149,Vasant Joglekar
+Q5954578,Hossein M Abkenar
+Q2396964,Arjan Ederveen
+Q30136697,Derek Kolstad
+Q5890760,Homi Wadia
+Q1191315,Michael Reaves
+Q2104986,Pierre Drouot
+Q3025361,Dev Benegal
+Q17639300,Richie Mehta
+Q4749132,Amy Catherine Walton
+Q44739702,Isabella Aguilar
+Q15126096,Chris D
+Q7427291,Saul Dibb
+Q16252723,Vamsi Paidipally
+Q557171,Gadi Taub
+Q3505566,Václav Krška
+Q15999561,George S Brooks
+Q7645791,Suresh Unnithan
+Q4234023,Vadim Nikolayevich Korostylyov
+Q1174454,David Franzoni
+Q4358044,Mark McCorkle
+Q1974435,Scott Paulin
+Q3120634,Guinn Big Boy Williams
+Q6471015,Laerte
+Q46048305,Frédéric Simard
+Q9352747,Samuel Yau Man Shing
+Q2501572,Dayton Callie
+Q8865701,Janusz Warnecki
+Q4289388,Vjatsjeslav Dmitrievitsj Melechov
+Q2405785,Sarah Millicent Hermione Tuchet-Jesson Baroness Audley
+Q194419,Sir Richard Branson
+Q5605551,Greg Fawcett
+Q3424831,Renato Scarpa
+Q52183,Hasina Wazed
+Q381471,Chris Gardner
+Q52714404,Samyam Puri
+Q22976274,Michael Marcus
+Q20724301,Alice Houri
+Q8195576,Alicia Aller
+Q15407220,Suzanne Munte
+Q4973946,Bronisław Cieślak
+Q1033,🇳🇬
+Q916,ao
+Q115,et
+Q29999,Netherlands
+Q30,U.S.A.
+Q781,🇦🇬
+Q39,🇨🇭
+Q219,Republic of Bulgaria
+Q774,Guatemala
+Q811,ni
+Q846,State of Qatar
+Q685,🇸🇧
+Q965,🇧🇫
+Q1028,Arab Maghreb
+Q1007,Republic of GuineaBissau
+Q865,Chunghwa Minkuo
+Q889,Afghanistan
+Q958,Southern Sudan
+Q794,Islamic Rep. Iran
+Q948,🇹🇳
+Q4338318,awareness
+Q11526469,Todaiji Daibutsu
+Q485508,Charles Manson
+Q80930,tragedy
+Q192571,child labor
+Q2113637,2011 Israeli social justice protests
+Q1519402,NYBOT
+Q154340,Francis Bacon
+Q1189309,sham marriage
+Q1011020,Orania Northern Cape
+Q3295867,Coca Cola
+Q177764,Vodoun
+Q313868,Fela AnikulapoKuti
+Q704308,Bernard Dietz
+Q51491,Michael Curtiz
+Q1567507,Traditional Tibetan medicine
+Q630281,messianism
+Q246497,Mstislav Vsevolodovich Keldysh
+Q473814,amok
+Q1334052,motherdaughter relationship
+Q36161,set
+Q37260,typography
+Q791801,estimation process
+Q769620,social action
+Q2738074,political movement
+Q1194480,genre fiction
+Q2188189,musical work
+Q187947,musical score
+Q16512470,rule
+Q29651224,nonhumanmade object
+Q7331102,alcohol abuse
+Q327000,court decisions
+Q920057,ladies sports
+Q17008256,collection
+Q18928530,primary Actinomycetales infectious disease
+Q183046,meaning
+Q1634879,Encephalitis or myelitis
+Q14547231,international sport competition
+Q3604747,acquisition
+Q181283,adult comics
