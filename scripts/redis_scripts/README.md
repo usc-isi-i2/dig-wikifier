@@ -32,7 +32,7 @@ let's say we want to delete the first counts dictionary we stored, we shall use 
 python populate_redis.py -x localhost -p 6379 -d data.json -t DEL -v counts:
 
 This will delete all the keys in the dictionary that were stored as `counts:key` from Redis
-
+```
 
 ## Wikifier baseline
 
