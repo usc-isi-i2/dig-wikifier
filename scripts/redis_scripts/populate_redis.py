@@ -56,8 +56,10 @@ if __name__ == "__main__":
         port=int(args.port))
     print("redis connection established")
     i=0
+
+    key_prefix = args.prefix if args.prefix is not None else ""
     for key in data:
-        rkey = args.prefix +key
+        rkey = key_prefix +key
         i+=1
         if i%10000 == 0:
             printProgressBar(i, len(data), prefix = 'Progress:', suffix = 'Complete', length = 50)
