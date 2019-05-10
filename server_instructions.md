@@ -182,3 +182,34 @@ The keys are of the form
 }
 ```
 All the above data structures are loaded into redis instance running on the minds server
+
+
+The different endpoints on the wikifier server can be accessed as below -
+
+1. Wikification of text
+Annotating a piece of text -
+```
+curl --header "Content-Type:application/json"   --request POST   --data '{"text" : {"text_description" : "Ethiopia Sagan" } }'   http://server:4444/annotate
+```
+
+2. Get properties of a Qnode -
+```
+curl --header "Content-Type:application/json"   --request POST   --data '['Q22686']'   http://server:4444/get_properties
+```
+
+3. Getting similarity score between two Qnodes with the model that's running in Wikifier -
+```
+curl --header "Content-Type:application/json"   --request POST   --data '["Q22686", "Q30"]'   http://server:4444/get_similarity_score
+```
+
+4. Get all statements  for a Qnode (i.e dictionary of connections )
+```
+curl --header "Content-Type:application/json"   --request POST   --data '{"ids": ["Q22686", "Q30"], "properties":["P31", "P279"]}'   http://server:4444/get_statements
+```
+
+5. Get candidates for identifiers -
+```
+curl --header "Content-Type:application/json"   --request POST   --data '{"ids": ["5333260","5333263","5333262"]}'   http://server:4444/get_identifiers
+```
+
+
