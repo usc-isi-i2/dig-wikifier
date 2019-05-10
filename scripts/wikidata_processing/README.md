@@ -82,6 +82,13 @@ The generated output should look like
 }
 ```
 
+## Glossary and label map generator
+This script computes one of the required data structures for the wikifier service, the label map. It can be used as follows -
+```
+python glossary_label_map_gen.py -w wikidatapth.gz -l labelout.json -g glossaryout.txt
+```
+Once generated, that data structure can be loaded into redis using populateredis.py
+
 ## Edge pruning
 This script has been used to take the neighbor map produced by compute_neighbors.py and reduce it to a subgraph. It takes a list of nodes
 as whitelist, and retains only edges that connect any two nodes that are present in the whitelist. This way we get a neat subgraph of just

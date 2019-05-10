@@ -71,15 +71,29 @@ Embeddings that will be required - One of **VERSE/TransX Embeddings**
 It is a dictionary structure used in the wikifier. The keys are labels and the values are a list of Qnodes that possess that exact label
 We use this as a secondary trie, by loading it to redis and pointing a modified version of etk extractor to this redis.
 Compute the data using script mentioned [here](https://github.com/usc-isi-i2/dig-wikifier/tree/master/scripts/wikidata_processing)
+
+Also the script to directly generate it can be run as follows -
+
+```
+python glossary_label_map_gen.py -w wikidatapth.gz -l candidatemap.json -g glossaryout.txt
+```
+
+
 Once the labels are extracted, generate a reverse mapping of label-to-Qnodes using that dictionary and load that into redis as -
 ```
-python populate_redis.py -x localhost -p 6379 -d data.json -t SET -v ""
+python populate_redis.py -x localhost -p 6379 -d candidatemap.json -t SET -v ""
 
 Note: Do not enter any prefix here
 ```
+This should load the label map gen into redis
+
 
 ## Labels for each node
-We computed the labels for each node in the above step which we used to generate the reverse mapping.
+The labels for each qnode can be constructed using the following script -
+```
+python label_map_gen.py -w path_to_wikidata.gz -l label_map.json
+```
+
 Load the label map into redis as follows -
 ```
 python populate_redis.py -x localhost -p 6379 -d label_map.json -t SET -v "lbl:"
