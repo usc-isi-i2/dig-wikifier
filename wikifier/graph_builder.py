@@ -30,6 +30,36 @@ class GraphBuilder():
         data['right'] = list(set_b)
         return data
 
+    def get_identifiers(self,data):
+        ids = data['ids'] if 'ids' in data.keys() else {}
+        # Check empty
+        if not ids:
+            return {}
+        data = self.redisManager.getKeys(keys=ids, prefix="identifiers:")
+        final = dict()
+        for key in data:
+            final[key] = list(data[key])
+        return final
+
+    def get_statements(self, data):
+        ids = data['ids'] if 'ids' in data.keys() else {}
+        props = data['properties'] if 'properties' in data.keys() else {}
+        # Check empty
+        if not ids:
+            return {}
+        data = self.redisManager.getKeysAsJson(keys=ids, prefix="statements:")
+        # Filter the properties.
+        filter_props = set(props)
+        if filter_props:
+            for key in data:
+                statements = data[key]
+                final_data = dict()
+                for x in filter_props:
+                    if x in statements.keys():
+                        final_data[x] = statements[x]
+                data[key] = final_data
+        return data
+
     def get_qnode_properties(self, list_of_qnodes):
         """
         :param list_of_qnodes : List of qnodes to fetch their properties
@@ -84,16 +114,16 @@ class GraphBuilder():
                 if first != second:
                     sr_score = self.verse_similarity.get_score(first, second)
                     total += sr_score
-                    if sr_score > 0.5:
+                    if sr_score > 0.8:
                         G.add_weighted_edges_from([(first, second, sr_score)])
 
             #for second in qnodes:
             #    if second in G[first]:
             #        G[first][second]['weight'] /= total
-        scores = dict()
-        for node in G.nodes:
-            scores[node] = 1000
-        res = pagerank(G, alpha=0.1, weight='weight', nstart=scores)
+        #scores = dict()
+        #for node in G.nodes:
+        #    scores[node] = 1000
+        res = pagerank(G, alpha=0.1, weight='weight')
         graph_data['nx'] = dict()
         pr_result = dict()
 

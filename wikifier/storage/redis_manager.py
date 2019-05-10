@@ -1,4 +1,5 @@
 import redis
+import json
 
 class RedisManager(object):
     """
@@ -63,5 +64,16 @@ class RedisManager(object):
         data = dict(zip(keys,pipe.execute()))
         return data
 
+    def getKeysAsJson(self, keys, prefix=""):
+        """
+        :param keys: List of keys to fetch from redis
+        :param prefix: They keyspace in redis
+        :return: Return a dictionary of statements for each key.
+        """
+        pipe = self.redis.pipeline()
+        for key in keys:
+            pipe.get(prefix+key)
+        data = dict(zip(keys, [json.loads(x) for x in pipe.execute()]))
+        return data
 
 
