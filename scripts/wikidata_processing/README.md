@@ -48,7 +48,7 @@ probability within the Wikifier service.
 python compute_label_node_count.py -l label_map.json -o outfile.json -w wikidatapath.gz
 ```
 
-** Note that this file requires the label_map generated as input to extract the counts **
+**Note that this file requires the label_map generated as input to extract the counts**
 
 
 ## Compute properties of Qnodes

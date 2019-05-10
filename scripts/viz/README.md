@@ -77,11 +77,11 @@ To load the word2vec embedding trained after the random walks are generated, use
 python generate_word2vec_tsne.py -b theword2vecmodel
 ```
 
-** Note: All of the above programs require a file like the embed_film.txt, and will not run without it. Feel free to modify to suit different formats, embeddings etc **
+**Note: All of the above programs require a file like the embed_film.txt, and will not run without it. Feel free to modify to suit different formats, embeddings etc**
 
 ## Using T-SNE viz file
 Once you have generated an input in the expected format, use the tsne_viz.py to plot the T-SNE diagram
-** Note: Requires sklean and matplotlib as dependencies, will be there in env file**
+**Note: Requires sklean and matplotlib as dependencies**
 
 ```
 python tsne_viz.py
