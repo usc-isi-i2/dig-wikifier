@@ -38,8 +38,7 @@ The outfile.json will look like the following -
 ```
 
 And also it will contain the entire 56+ million entities in Wikidata along with their edges.
-** Note: This script only extracts properties that connect two Qnodes in Wikidata. There are several other properties in Wikidata that point to constants, but for the
-purpose of our analysis and experiments, we limited ourselves to edges between two Qnodes **
+**Note: This script only extracts properties that connect two Qnodes in Wikidata. There are several other properties in Wikidata that point to constants, but for the purpose of our analysis and experiments, we limited ourselves to edges between two Qnodes**
 
 ## Compute occurance of label-to-Qnode counts
 This script is used to compute number of times a specific label and qnode are being referenced within the wikidata ontology. This is used as a reference for transition
@@ -99,7 +98,5 @@ http://wikidata.org/wiki/Q123
 .
 ```
 
-** Note : All these files are extremely large and will take a lot of memory to process. If you're trying this on your local machine with entire wikidata, that would
-be extremely bad idea. Please use a machine with large enough ram or work with smaller subsets of the ontology. If not, load the wikdata into a secondary structure like
-MySQL or MongoDB and then repurpose the scripts to work using these secondary structures. **
+**Note : All these files are extremely large and will take a lot of memory to process. If you're trying this on your local machine with entire wikidata, that would be extremely bad idea. Please use a machine with large enough ram or work with smaller subsets of the ontology. If not, load the wikdata into a secondary structure like MySQL or MongoDB and then repurpose the scripts to work using these secondary structures.**
 
