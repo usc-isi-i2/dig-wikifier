@@ -81,7 +81,7 @@ python generate_word2vec_tsne.py -b theword2vecmodel
 
 ## Using T-SNE viz file
 Once you have generated an input in the expected format, use the tsne_viz.py to plot the T-SNE diagram
-**Note: Requires sklean and matplotlib as dependencies**
+**Note: Requires sklearn, scipy and matplotlib as dependencies**
 
 ```
 python tsne_viz.py

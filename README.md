@@ -34,3 +34,5 @@ This repo contains the scripts used to preprocess wikidata, and also run the wik
 
 Git-lfs (Important) -
 This repository contains some files that are stored via git-lfs. These are some of the files generated during the intermediary steps in preprocessing wikifier data. If you require to use these files, fetch them using git-lfs. Refer https://github.com/git-lfs/git-lfs/wiki/Tutorial on how to fetch files stored via git-lfs.
+
+

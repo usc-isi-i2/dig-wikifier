@@ -55,3 +55,67 @@ Redis config file - redis/redis-5.0.0/config/6379.conf
 
 the log for the service is written to `wiki.log`
 
+# To setup wikifier (From scratch)
+We require 3 key data structures to get the wikifier up and running.
+First setup the env as mentioned in the [README](https://github.com/usc-isi-i2/dig-wikifier/tree/master)
+**Note: If some dependencies were missed, install them as the errors pop-up**
+
+Data structures that will be required in redis -
+1. Candidates map
+2. Labels for each qnode
+3. Label-count map
+
+Embeddings that will be required - One of **VERSE/TransX Embeddings**
+
+## What is candidate map and how to generate Candidates map?
+It is a dictionary structure used in the wikifier. The keys are labels and the values are a list of Qnodes that possess that exact label
+We use this as a secondary trie, by loading it to redis and pointing a modified version of etk extractor to this redis.
+Compute the data using script mentioned [here](https://github.com/usc-isi-i2/dig-wikifier/tree/master/scripts/wikidata_processing)
+Once the labels are extracted, generate a reverse mapping of label-to-Qnodes using that dictionary and load that into redis as -
+```
+python populate_redis.py -x localhost -p 6379 -d data.json -t SET -v ""
+
+Note: Do not enter any prefix here
+```
+
+## Labels for each node
+We computed the labels for each node in the above step which we used to generate the reverse mapping.
+Load the label map into redis as follows -
+```
+python populate_redis.py -x localhost -p 6379 -d label_map.json -t SET -v "lbl:"
+
+Note: Prefix is - "lbl:"
+```
+
+## Label count map
+Now We can again use the script mentioned [here](https://github.com/usc-isi-i2/dig-wikifier/tree/master/scripts/wikidata_processing) to
+compute label-to-Qnode count dictionary
+We can then load that dictionary to redis as -
+```
+python populate_redis.py -x localhost -p 6379 -d label_count.json -t SET -v ""
+```
+
+Again no prefix here, the keys will be of the form `Donald Trump:Q22686` and value as `56` and so on
+
+Once we load these three data structures into redis into the right keyspaces we are good to proceed to the last step of the setup
+
+## Loading the embedding.
+Store the embeddings in one of the locations and pass the location in the `wikifier.cfg` file. Ensure to set the properties correctly
+before trying to start the service using `run_wikifier.sh`
+
+Current properties can be found [here](https://github.com/usc-isi-i2/dig-wikifier/blob/master/wikifier/wikifier.cfg)
+
+Once all the above steps have been completed, we can proceed to run the starter script `run_wikifier.sh` which should start the service on the
+specified port in the config
+
+
+Currently the files are stored in the following locations -
+## Embeddings
+Embeddings are located on minds03 server at `/lfs1/wikidata/wikifier/embeddings` folder. The are other embeddings that have been generated
+and are located at `/lfs1/embeddings` folder
+
+## The service
+The service that has the code synced with this repository is located at `/lfs1/wikidata` folder
+
+## Redis setup
+If you have queries regarding redis server setup, refer [this](https://github.com/usc-isi-i2/dig-wikifier/blob/master/scripts/REDIS.md)
