@@ -51,7 +51,17 @@ Redis config file - redis/redis-5.0.0/config/6379.conf
 
 ## To run wikifier
 1. Activate the virtual env - wikifier
-2. Go to `/lfs1/wikidata/wikifier/` and execute `run_wikifier.sh`
+```
+source ~/.bash_profile
+source activate wikifier
+```
+2. Export variables -
+```
+export APP_SETTINGS=/path/to/wikfifier.cfg
+export FLASK_APP=/path/to/server.py
+```
+
+3. Go to `/lfs1/wikidata/wikifier/` and execute `run_wikifier.sh`
 
 the log for the service is written to `wiki.log`
 
