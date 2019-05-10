@@ -126,7 +126,7 @@ specified port in the config
 
 Currently the files are stored in the following locations -
 ## Embeddings
-Embeddings are located on minds03 server at `/lfs1/wikidata/wikifier/embeddings` folder. The are other embeddings that have been generated
+Embeddings are located on minds server at `/lfs1/wikidata/wikifier/embeddings` folder. The are other embeddings that have been generated
 and are located at `/lfs1/embeddings` folder
 
 ## The service
@@ -134,3 +134,51 @@ The service that has the code synced with this repository is located at `/lfs1/w
 
 ## Redis setup
 If you have queries regarding redis server setup, refer [this](https://github.com/usc-isi-i2/dig-wikifier/blob/master/scripts/REDIS.md)
+
+## Current data-structures in redis
+
+We have the following dictionaries loaded into redis with different keyspaces -
+1. Wikidata node labels -
+Wikidata node labels are loaded into as "lbl:key" where key could be any Qnode ID
+it returns a set of lables for that Qnode id from redis
+
+2. Properties of nodes -
+Wikidata properties are loaded into redis as "properties:key" where key could be any QnodeID
+it returns a set of properties for a wikidata node
+
+3. Candidate map -
+The candidate map is the dictionary that indicates the possible candidate qnodes for a given label
+It is of the form "somelabel" and stores a set of qnodes that are the candidates
+
+For ex:
+"Donald Trump"  will have ["Q22686", "Q12412" . . . . ]
+
+4. Label-Qnode count map
+The dictionary here, is used for transition probabilities in the wikifier flow, The dictionary looks as follows
+```
+{
+    "Donald Trump:Q22686": 55,
+    "Donald Trump:Q12412": 10,
+    .
+    .
+    .
+    .
+}
+```
+This is also currently loaded into redis
+
+5. Identifiers map
+Each qnode in wikidata has a bunch of identifiers that are used to identify that qnode across several standard data repositories
+We create a reverse mapping of the Identifiers to possible repositories. This data structure is loaded in the keyspace "identifiers:"
+
+The keys are of the form
+````
+{
+"identifiers:124215" : [
+    "P932/Q37676537",
+    "P698/Q43451389",
+    "P1566/Q49374498"
+  ]
+}
+```
+All the above data structures are loaded into redis instance running on the minds server
