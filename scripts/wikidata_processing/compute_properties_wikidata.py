@@ -68,7 +68,10 @@ with gzip.GzipFile(args.wikidatapath, 'r') as fin:
                 continue
             statements = data['claims']
             properties = set(statements.keys())
-            found_props = list(properties.intersection(allowed))
+            if allowed:
+                found_props = list(properties.intersection(allowed))
+            else:
+                found_props = list(properties)
             pmap[doc_id] = found_props
         except Exception as e:
             print("Error while loading a json line {}".format(e.args))

@@ -27,7 +27,7 @@ Then use the following command to run the biggraph tsne_script -
 ```
 
 python generate_biggraph_tsne.py -b generated_file
-
+```
 
 ## transE T-SNE
 
