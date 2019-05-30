@@ -153,7 +153,7 @@ Wikidata node labels are loaded into as "lbl:key" where key could be any Qnode I
 it returns a set of lables for that Qnode id from redis
 
 2. Properties of nodes -
-Wikidata properties are loaded into redis as "properties:key" where key could be any QnodeID
+Wikidata properties are loaded into redis as "prop:key" where key could be any QnodeID
 it returns a set of properties for a wikidata node
 
 3. Candidate map -
@@ -204,7 +204,7 @@ curl --header "Content-Type:application/json"   --request POST   --data '{"text"
 
 2. Get properties of a Qnode -
 ```
-curl --header "Content-Type:application/json"   --request POST   --data '['Q22686']'   http://server:4444/get_properties
+curl --header "Content-Type:application/json"   --request POST   --data '["Q22686"]'   http://server:4444/get_properties
 ```
 
 3. Getting similarity score between two Qnodes with the model that's running in Wikifier -
